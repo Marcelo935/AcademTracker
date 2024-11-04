@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "968021654352",
+    "project_id": "academtracker-e3dca",
+    "storage_bucket": "academtracker-e3dca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968021654352:android:4eed93670d33ccda6cca55",
+        "android_client_info": {
+          "package_name": "com.example.academtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMB9lKdP218bf-pFQNSCKPx1cIlEu-sfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
