@@ -17,6 +17,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="70dp" />
 
+
+
     <!-- ImageView -->
     <ImageView
         android:id="@+id/imageView2"
@@ -49,5 +51,16 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp" />
+
+    <Button
+        android:id="@+id/QRbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QR"
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="283dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailprofesor"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

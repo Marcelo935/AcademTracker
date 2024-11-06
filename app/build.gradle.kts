@@ -53,6 +53,6 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:21.0.0")
     implementation("com.google.firebase:firebase-storage:21.0.0")
     implementation ("com.squareup.picasso:picasso:2.71828")
-
+    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
 
 }
