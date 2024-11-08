@@ -56,11 +56,23 @@
         android:id="@+id/QRbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="QR"
-        tools:layout_editor_absoluteX="157dp"
-        tools:layout_editor_absoluteY="283dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailprofesor"/>
+        app:layout_constraintHorizontal_bias="0.232"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailprofesor" />
+
+    <Button
+        android:id="@+id/NFCbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="72dp"
+        android:text="NFC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

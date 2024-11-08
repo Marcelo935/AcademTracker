@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.academtracker.LectorNFCActivity;
 import com.example.academtracker.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,7 +34,7 @@ public class PerfilProfesorActivity extends AppCompatActivity {
 
     MaterialButton regresar;
 
-    Button scanner;
+    Button scanner, NFC;
 
     String useremail = "";
 
@@ -50,6 +51,7 @@ public class PerfilProfesorActivity extends AppCompatActivity {
         nombreprofesor = findViewById(R.id.nombrecompleto);
         emailprofesor = findViewById(R.id.emailprofesor);
         scanner = findViewById(R.id.QRbutton);
+        NFC = findViewById(R.id.NFCbutton);
 
         scanner.setOnClickListener(view -> startQRScanner());
 
@@ -99,6 +101,15 @@ public class PerfilProfesorActivity extends AppCompatActivity {
                 Intent intent = new Intent(PerfilProfesorActivity.this, ProfesorActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        NFC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Inicia la actividad LectorNFCActivity
+                Intent intent = new Intent(PerfilProfesorActivity.this, LectorNFCActivity.class);
+                startActivity(intent);
             }
         });
     }
