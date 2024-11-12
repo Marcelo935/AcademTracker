@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Título "Registro de Pagos" -->
+    <TextView
+        android:id="@+id/tituloRegistroPagos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REGISTRO DE PAGOS"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true" />
+
+    <!-- Campo para el monto -->
+    <EditText
+        android:id="@+id/etMonto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Monto"
+        android:inputType="numberDecimal"
+        android:layout_below="@id/tituloRegistroPagos"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Campo para el método de pago -->
+    <EditText
+        android:id="@+id/etMetodoPago"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Método de pago"
+        android:layout_below="@id/etMonto"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Campo para la fecha -->
+    <EditText
+        android:id="@+id/etFecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fecha"
+        android:layout_below="@id/etMetodoPago"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Campo para el ID del alumno -->
+    <EditText
+        android:id="@+id/etAlumnoId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ID del Alumno"
+        android:layout_below="@id/etFecha"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Botón para registrar el pago -->
+    <Button
+        android:id="@+id/btnRegistrarPago"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrar Pago"
+        android:layout_below="@id/etAlumnoId"
+        android:layout_marginTop="16dp"/>
+</RelativeLayout>
+

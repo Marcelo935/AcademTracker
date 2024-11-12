@@ -22,26 +22,30 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AcademTracker"
         tools:targetApi="31">
-        <activity android:name=".LectorNFCActivity"
-            android:label="Lector NFC"
-            android:exported="true">
+        <activity
+            android:name=".UsuarioAvanzado.RegistropagosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LectorNFCActivity"
+            android:exported="true"
+            android:label="Lector NFC">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
-            <!-- Soporte para etiquetas NDEF -->
-            <meta-data android:name="android.nfc.action.TECH_DISCOVERED" android:resource="@xml/nfc_tech_filter" />
+            <!-- Configuración del filtro de tecnologías NFC -->
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
         </activity>
 
         <!-- Se setea automaticamente la horientacion en vertical -->
