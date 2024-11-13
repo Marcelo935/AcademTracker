@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.academtracker.R;
@@ -24,6 +25,7 @@ import java.util.Objects;
 public class PerfilSecretariasActivity extends AppCompatActivity {
 
     MaterialButton regresar;
+    Button excel;
     TextView nombre,email;
     String useremail = "";
     private FirebaseFirestore db;
@@ -36,6 +38,7 @@ public class PerfilSecretariasActivity extends AppCompatActivity {
         regresar = findViewById(R.id.returnbtn);
         nombre = findViewById(R.id.nombrecompleto);
         email = findViewById(R.id.emailsecretaria);
+        excel = findViewById(R.id.btn_excel);
 
         db = FirebaseFirestore.getInstance();
         //toma la referencia de la coleccion usuarios
@@ -74,6 +77,15 @@ public class PerfilSecretariasActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                     }
                 });
+
+        excel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PerfilSecretariasActivity.this, ExcelActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         regresar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.academtracker"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -54,4 +54,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:21.0.0")
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation("com.journeyapps:zxing-android-embedded:4.1.0")
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
 }
