@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_alfredo"
+        android:icon="@drawable/ic_person"
+        android:title="Alfredo"/>
+    <item
+        android:id="@+id/nav_miguel"
+        android:icon="@drawable/ic_person"
+        android:title="Miguel"/>
+    <item
+        android:id="@+id/nav_marcelo"
+        android:icon="@drawable/ic_person"
+        android:title="Marcelo"/>
+</menu>
