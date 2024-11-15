@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.academtracker.LoginActivity;
+import com.example.academtracker.ProfesorCalificaciones_man;
 import com.example.academtracker.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,8 +41,6 @@ public class ProfesorActivity extends AppCompatActivity {
         asistencias = findViewById(R.id.asistenciasbtn);
         salir = findViewById(R.id.salirbtn);
 
-
-
         perfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +61,17 @@ public class ProfesorActivity extends AppCompatActivity {
 
         });
 
+        calificaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfesorActivity.this, ProfesorCalificaciones_man.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
+
+        /*
         calificaciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,10 +111,10 @@ public class ProfesorActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                             }
                         });
-
             }
-
         });
+
+         */
 
         asistencias.setOnClickListener(new View.OnClickListener() {
             @Override

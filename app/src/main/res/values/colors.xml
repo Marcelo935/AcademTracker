@@ -7,4 +7,5 @@
     <color name="color_boton">#3F51B5</color>
     <color name="gris">	#808080</color>
     <color name="rojo">#FF0000</color>
+    <color name="cardcolor">#E1CECE</color>
 </resources>

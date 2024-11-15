@@ -73,6 +73,9 @@
             android:name=".UsuarioAvanzado.PerfilSecretariasActivity"
             android:exported="false" />
         <activity
+            android:name=".ProfesorCalificaciones_man"
+            android:exported="false" />
+        <activity
             android:name=".SecretariaActualizaAlumnos_man"
             android:exported="false" />
         <activity

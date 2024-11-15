@@ -59,9 +59,6 @@ public class AsistenciasActivity extends AppCompatActivity {
         String Foto = data.getStringExtra("Foto");
 
 
-        //Toast.makeText(AsistenciasActivity.this, Grado, Toast.LENGTH_SHORT).show();
-        //String Nombre = "Alex";
-        //String Grado = "1";
         db = FirebaseFirestore.getInstance();
         //toma la referencia de la coleccion usuarios
         CollectionReference collectionReference = db.collection("Acta");
