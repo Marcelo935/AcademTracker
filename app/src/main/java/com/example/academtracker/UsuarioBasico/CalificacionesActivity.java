@@ -124,7 +124,7 @@ public class CalificacionesActivity extends AppCompatActivity {
                 .document(uid)
                 .collection("calificaciones")
                 .document(materia)
-                .set(map) // Usamos set para sobreescribir los datos en vez de update
+                .set(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {

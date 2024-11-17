@@ -76,6 +76,9 @@
             android:name=".ProfesorCalificaciones_man"
             android:exported="false" />
         <activity
+            android:name=".Secretarias_materias_man"
+            android:exported="false" />
+        <activity
             android:name=".SecretariaActualizaAlumnos_man"
             android:exported="false" />
         <activity

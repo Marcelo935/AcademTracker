@@ -134,7 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
                 return 0;  // 0 para profesor
             }
         } else {
-            return -1; // Dominio no válido
+            return -1; // Dominio no válidor
         }
     }
 

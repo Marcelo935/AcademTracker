@@ -11,6 +11,7 @@ import android.view.View;
 import com.example.academtracker.ListaSecretariasAlumnosFragment;
 import com.example.academtracker.LoginActivity;
 import com.example.academtracker.R;
+import com.example.academtracker.Secretarias_materias_man;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -70,7 +71,7 @@ public class SecretariasActivity extends AppCompatActivity {
         modificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SecretariasActivity.this, SecretariasListacalifActivity.class);
+                Intent intent = new Intent(SecretariasActivity.this, Secretarias_materias_man.class);
                 startActivity(intent);
                 finish();
             }
