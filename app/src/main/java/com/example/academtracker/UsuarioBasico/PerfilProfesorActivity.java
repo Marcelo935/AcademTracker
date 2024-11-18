@@ -43,12 +43,11 @@ import java.util.Objects;
 public class PerfilProfesorActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     MaterialButton regresar;
-    Button scanner, NFC;
-    String useremail = "";
+    Button QrGeo, QrAlg, QrHis, NFC;
+    String useremail = "", materia = "";
     TextView emailprofesor,nombreprofesor;
     DrawerLayout navDrawer;
     Toolbar toolbar; // Añadir Toolbar aquí
-
     private FirebaseFirestore db;
 
 
@@ -60,15 +59,15 @@ public class PerfilProfesorActivity extends AppCompatActivity implements Navigat
         regresar = findViewById(R.id.returnbtn);
         nombreprofesor = findViewById(R.id.nombrecompleto);
         emailprofesor = findViewById(R.id.emailprofesor);
-        scanner = findViewById(R.id.QRbutton);
+        QrGeo = findViewById(R.id.QRbuttonGeo);
+        QrAlg = findViewById(R.id.QRbuttonAlg);
+        QrHis = findViewById(R.id.QRbuttonHist);
         NFC = findViewById(R.id.NFCbutton);
         navDrawer = findViewById(R.id.navDrawer);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar); // Establece el Toolbar como ActionBar
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        scanner.setOnClickListener(view -> startQRScanner());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null)
@@ -119,6 +118,40 @@ public class PerfilProfesorActivity extends AppCompatActivity implements Navigat
             }
         });
 
+        QrGeo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materia = "Geografia";
+                startQRScanner();
+            }
+        });
+
+        QrHis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materia = "Historia";
+                startQRScanner();
+            }
+        });
+
+        QrAlg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materia = "Algebra";
+                startQRScanner();
+            }
+        });
+
+        NFC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PerfilProfesorActivity.this, LectorNFCActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        /*
         NFC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +160,7 @@ public class PerfilProfesorActivity extends AppCompatActivity implements Navigat
                 startActivity(intent);
             }
         });
+         */
 
         // Configuración del toggle para abrir/cerrar el Drawer con el icono en la barra de acción
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, navDrawer, R.string.open_drawer, R.string.close_drawer);
@@ -164,7 +198,7 @@ public class PerfilProfesorActivity extends AppCompatActivity implements Navigat
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);//la variable result recibe los datos
         if(result != null){
             if(result.getContents() != null) {
-                getstudentID(result.getContents());
+                getstudentID(result.getContents(), materia);
             }else{
                 Toast.makeText(this, "ESCANEO INVALIDO", Toast.LENGTH_SHORT).show();//en caso de que no reciba nada
             }
@@ -173,15 +207,18 @@ public class PerfilProfesorActivity extends AppCompatActivity implements Navigat
         }
     }
 
-    public void getstudentID(String id){//Funcion para obtener el id de los documentos de los estudiantes
-        db.collection("Alumnos").document(id)
+    public void getstudentID(String id, String materia){//Funcion para obtener el id de los documentos de los estudiantes
+        db.collection("Alumnos")
+                .document(id)
+                .collection("calificaciones")
+                .document(materia)
                 .update("asistencia", FieldValue.increment(1)) // Incrementa el campo "asistencia" en 1
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Asistencia capturada", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(exception -> {
                     Toast.makeText(this, "No se encontró el documento", Toast.LENGTH_SHORT).show();
-                });
+         });
     }
 
     @Override

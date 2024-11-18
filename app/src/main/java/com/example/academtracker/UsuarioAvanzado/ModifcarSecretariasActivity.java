@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.academtracker.R;
+import com.example.academtracker.Secretarias_materias_man;
+import com.example.academtracker.UsuarioBasico.ProfesorActivity;
 import com.example.academtracker.adapter.Profesores_Editarcalf_adapter;
 import com.example.academtracker.adapter.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,7 +55,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validarMateria(uid,materia.getText().toString());
+                validarMateria(uid,materia.getText().toString(),alumno.getText().toString());
             }
         });
 
@@ -63,17 +65,27 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
         CollectionReference addMateriaRef = mFirestore.collection("Profesores")
                 .document(idProfesor)
                 .collection("materias");
-        // Usar el ID proporcionado para crear un nuevo documento
-        addMateriaRef.document(idMateria);
+
+        addMateriaRef.document(idMateria).set(new HashMap<>());
     }
 
-    private void agregarAlumno(DocumentReference materiaRef, String nombreAlumno){
-        materiaRef.update(nombreAlumno, true).addOnSuccessListener(aVoid -> {
-
-        });
+    private void agregarAlumno(String idMateria, String nombreAlumno, String idProfesor){
+            DocumentReference addStudent = mFirestore.collection("Profesores")
+                    .document(idProfesor)
+                    .collection("materias")
+                    .document(idMateria);
+            String idAlumno = addStudent.getId() + "_" + System.currentTimeMillis();
+            addStudent.update("alumnos." + idAlumno, nombreAlumno)
+                    .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Alumno registrado con éxito.",Toast.LENGTH_SHORT).show();
+            })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Fallo al registrar Alumno.",Toast.LENGTH_SHORT).show();
+            });
     }
 
-    private void validarMateria(String idProfesor, String nombreMateria) {
+
+    private void validarMateria(String idProfesor, String nombreMateria, String nombreAlumno) {
         DocumentReference materiaRef = mFirestore.collection("Profesores")
                 .document(idProfesor)
                 .collection("materias")
@@ -83,7 +95,17 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
         materiaRef.get().addOnSuccessListener(DocumentSnapshot -> {
             if(!DocumentSnapshot.exists()){
                 agregarMateria(idProfesor,nombreMateria);
+                agregarAlumno(nombreMateria,nombreAlumno,idProfesor);
+            }else{
+                agregarAlumno(nombreMateria,nombreAlumno,idProfesor);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), Secretarias_materias_man.class));
+        finish();
     }
 }

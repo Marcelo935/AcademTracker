@@ -61,27 +61,44 @@
             android:layout_marginStart="16dp" />
 
         <Button
-            android:id="@+id/QRbutton"
+            android:id="@+id/QRbuttonGeo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="QR"
+            android:text="QR Geografia"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.232"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailprofesor" />
 
         <Button
+            android:id="@+id/QRbuttonAlg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="QR Aglebra"
+            app:layout_constraintTop_toBottomOf="@id/QRbuttonGeo"
+            app:layout_constraintStart_toStartOf="@+id/QRbuttonGeo"/>
+
+        <Button
+            android:id="@+id/QRbuttonHist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="QR Historia"
+            app:layout_constraintTop_toBottomOf="@id/QRbuttonAlg"
+            app:layout_constraintStart_toStartOf="@+id/QRbuttonAlg" />
+
+        <Button
             android:id="@+id/NFCbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="104dp"
-            android:layout_marginEnd="72dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="56dp"
             android:text="NFC"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.935"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageView2" />
+            app:layout_constraintStart_toEndOf="@+id/QRbuttonGeo"
+            app:layout_constraintTop_toTopOf="@id/QRbuttonGeo" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
