@@ -70,6 +70,9 @@
             android:name=".UsuarioAvanzado.SecretariasListacalifActivity"
             android:exported="false" />
         <activity
+            android:name=".Secretaria_pagos_man"
+            android:exported="false" />
+        <activity
             android:name=".UsuarioAvanzado.PerfilSecretariasActivity"
             android:exported="false" />
         <activity

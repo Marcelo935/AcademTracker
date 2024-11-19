@@ -299,4 +299,5 @@ public class AgregarSecretariasActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), SecretariasActivity.class));
         finish();
     }
+
 }

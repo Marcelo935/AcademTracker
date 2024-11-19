@@ -46,7 +46,7 @@
         android:id="@+id/etAlumnoId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ID del Alumno"
+        android:hint="Correo del Alumno"
         android:layout_below="@id/etFecha"
         android:layout_marginTop="16dp"/>
 
@@ -58,5 +58,13 @@
         android:text="Registrar Pago"
         android:layout_below="@id/etAlumnoId"
         android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/btnVerPagos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etAlumnoId"
+        android:layout_marginTop="80dp"
+        android:text="Ver pagos" />
 </RelativeLayout>
 

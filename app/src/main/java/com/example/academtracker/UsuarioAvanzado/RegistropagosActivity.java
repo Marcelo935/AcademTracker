@@ -1,5 +1,6 @@
 package com.example.academtracker.UsuarioAvanzado;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,12 +10,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.academtracker.R;
+import com.example.academtracker.Secretaria_pagos_man;
+import com.example.academtracker.Secretarias_materias_man;
+import com.example.academtracker.UsuarioBasico.ProfesorActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegistropagosActivity extends AppCompatActivity {
 
     private EditText etMonto, etMetodoPago, etFecha, etAlumnoId;
-    private Button btnRegistrarPago;
+    private Button btnRegistrarPago, btnVerPagos;
     private FirebaseFirestore db;
 
     @Override
@@ -31,12 +35,22 @@ public class RegistropagosActivity extends AppCompatActivity {
         etFecha = findViewById(R.id.etFecha);
         etAlumnoId = findViewById(R.id.etAlumnoId);
         btnRegistrarPago = findViewById(R.id.btnRegistrarPago);
+        btnVerPagos = findViewById(R.id.btnVerPagos);
 
         // Configurar el botón de registro de pago
         btnRegistrarPago.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registrarPago();
+            }
+        });
+
+        btnVerPagos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegistropagosActivity.this, Secretaria_pagos_man.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -104,5 +118,12 @@ public class RegistropagosActivity extends AppCompatActivity {
         public String getAlumnoId() {
             return alumnoId;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), SecretariasActivity.class));
+        finish();
     }
 }
