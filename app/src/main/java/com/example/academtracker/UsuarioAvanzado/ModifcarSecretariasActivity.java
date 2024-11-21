@@ -58,15 +58,61 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                 validarMateria(uid,materia.getText().toString(),alumno.getText().toString());
             }
         });
-
     }
 
     private void agregarMateria(String idProfesor, String idMateria) {
+        // Referencia a la subcolección "materias" dentro de "Profesores"
         CollectionReference addMateriaRef = mFirestore.collection("Profesores")
                 .document(idProfesor)
                 .collection("materias");
 
-        addMateriaRef.document(idMateria).set(new HashMap<>());
+        // Agregar materia a la subcolección "materias"
+        addMateriaRef.document(idMateria).set(new HashMap<>())
+                .addOnSuccessListener(aVoid -> {
+                    // Una vez agregada en "materias", agregar la materia a todos los alumnos en "calificaciones"
+                    agregarMateriaACalificacionesDeAlumnos(idMateria);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al agregar la materia en 'materias'.", Toast.LENGTH_SHORT).show();
+                    Log.e("ModifcarSecretarias", "Error al agregar la materia en 'materias'", e);
+                });
+    }
+
+    private void agregarMateriaACalificacionesDeAlumnos(String idMateria) {
+        // Referencia a la colección "Alumnos"
+        CollectionReference alumnosRef = mFirestore.collection("Alumnos");
+        // Obtener todos los alumnos
+        alumnosRef.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot alumnoSnapshot : queryDocumentSnapshots) {
+                        String alumnoId = alumnoSnapshot.getId(); // ID del documento del alumno
+
+                        // Crear documento para la materia en la subcolección "calificaciones"
+                        DocumentReference calificacionesRef = alumnosRef
+                                .document(alumnoId)
+                                .collection("calificaciones")
+                                .document(idMateria);
+
+                        Map<String, Object> calificacionesIniciales = new HashMap<>();
+                        calificacionesIniciales.put("1er parcial", 0);
+                        calificacionesIniciales.put("2do parcial", 0);
+                        calificacionesIniciales.put("3er parcial", 0);
+
+                        // Agregar el documento a la subcolección "calificaciones"
+                        calificacionesRef.set(calificacionesIniciales)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("ModifcarSecretarias", "Materia " + idMateria + " agregada a calificaciones de " + alumnoId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("ModifcarSecretarias", "Error al agregar la materia a calificaciones de " + alumnoId, e);
+                                });
+                    }
+                    Toast.makeText(this, "Materia agregada a calificaciones de todos los alumnos.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al obtener los alumnos.", Toast.LENGTH_SHORT).show();
+                    Log.e("ModifcarSecretarias", "Error al obtener los alumnos", e);
+                });
     }
 
     private void agregarAlumno(String idMateria, String nombreAlumno, String idProfesor){
@@ -83,8 +129,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                     Toast.makeText(this, "Fallo al registrar Alumno.",Toast.LENGTH_SHORT).show();
             });
     }
-
-
+    
     private void validarMateria(String idProfesor, String nombreMateria, String nombreAlumno) {
         DocumentReference materiaRef = mFirestore.collection("Profesores")
                 .document(idProfesor)
