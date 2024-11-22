@@ -1,13 +1,12 @@
 package com.example.academtracker.model;
 
 public class Materia {
-    private String nombre; // Nombre de la materia
+    private String nombre;
     private String parcial1;
     private String parcial2;
     private String parcial3;
 
-    public Materia() {} // Constructor vacío requerido por Firestore
-
+    // Constructor
     public Materia(String nombre, String parcial1, String parcial2, String parcial3) {
         this.nombre = nombre;
         this.parcial1 = parcial1;
@@ -15,6 +14,7 @@ public class Materia {
         this.parcial3 = parcial3;
     }
 
+    // Getters y Setters
     public String getNombre() {
         return nombre;
     }
