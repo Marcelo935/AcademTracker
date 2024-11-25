@@ -1,11 +1,9 @@
 package com.example.academtracker.UsuarioAvanzado;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,27 +11,25 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.academtracker.R;
-import com.example.academtracker.Secretarias_materias_man;
-import com.example.academtracker.UsuarioBasico.ProfesorActivity;
-import com.example.academtracker.adapter.Profesores_Editarcalf_adapter;
-import com.example.academtracker.adapter.TextView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.button.MaterialButton;
+import com.example.academtracker.adapter.AlumnosAdapter;
+import com.example.academtracker.model.Alumno;
+import com.example.academtracker.model.Alumnos;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModifcarSecretariasActivity extends AppCompatActivity {
@@ -41,10 +37,14 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private String uid;
     private Spinner spinnerMaterias;
-    private EditText alumno;
     private Button guardar;
+    private RecyclerView recyclerViewAlumnos;
+
     private ArrayList<String> listaMaterias = new ArrayList<>();
+    private ArrayList<Alumno> listaAlumnos = new ArrayList<>();
+    private ArrayList<String> alumnosSeleccionados = new ArrayList<>();
     private String materiaSeleccionada;
+    private AlumnosAdapter alumnosAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +55,19 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
 
         spinnerMaterias = findViewById(R.id.spinner_materias);
-        alumno = findViewById(R.id.et_alumno);
         guardar = findViewById(R.id.btn_save);
+        recyclerViewAlumnos = findViewById(R.id.recyclerViewAlumnos);
 
-        // Cargar las materias del profesor y llenar el Spinner
+        // Configuración del RecyclerView
+        recyclerViewAlumnos.setLayoutManager(new LinearLayoutManager(this));
+        alumnosAdapter = new AlumnosAdapter(listaAlumnos, alumnosSeleccionados);
+        recyclerViewAlumnos.setAdapter(alumnosAdapter);
+
+        // Cargar materias y alumnos
         cargarMaterias();
+        cargarAlumnos();
 
-        // Listener del botón Guardar
-        guardar.setOnClickListener(v -> {
-            if (materiaSeleccionada != null && !alumno.getText().toString().isEmpty()) {
-                validarMateria(uid, materiaSeleccionada, alumno.getText().toString());
-            } else {
-                Toast.makeText(this, "Selecciona una materia y escribe el nombre del alumno.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Listener del Spinner para capturar la materia seleccionada
+        // Listener del Spinner
         spinnerMaterias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -82,6 +79,53 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                 materiaSeleccionada = null;
             }
         });
+
+        // Listener del botón Guardar
+        guardar.setOnClickListener(v -> {
+            if (materiaSeleccionada != null && !alumnosSeleccionados.isEmpty()) {
+                // Crear una lista de tareas para obtener los documentos de los alumnos seleccionados
+                List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+
+                // Obtener los documentos de los alumnos seleccionados
+                for (String alumnoId : alumnosSeleccionados) {
+                    tasks.add(mFirestore.collection("Alumnos").document(alumnoId).get());
+                }
+
+                // Esperar que todas las tareas se completen
+                Tasks.whenAllSuccess(tasks).addOnSuccessListener(documentSnapshots -> {
+                    // Crear una lista de alumnos
+                    ArrayList<Alumno> alumnosSeleccionadosList = new ArrayList<>();
+
+                    // Iterar sobre los resultados, que son de tipo Object
+                    for (Object obj : documentSnapshots) {
+                        DocumentSnapshot documentSnapshot = (DocumentSnapshot) obj;  // Casting explícito a DocumentSnapshot
+                        if (documentSnapshot.exists()) {
+                            Alumno alumno = documentSnapshot.toObject(Alumno.class);
+                            if (alumno != null) {
+                                alumnosSeleccionadosList.add(alumno);
+                            }
+                        }
+                    }
+
+                    // Verificar cuántos alumnos se han agregado
+                    Log.d("ModifcarSecretarias", "Alumnos seleccionados: " + alumnosSeleccionadosList.size());
+
+                    // Llamar a la función para agregar los alumnos seleccionados
+                    if (!alumnosSeleccionadosList.isEmpty()) {
+                        agregarAlumnos(materiaSeleccionada, alumnosSeleccionadosList, uid);
+                        // Llamamos a la nueva función para agregar la materia a las calificaciones de los alumnos
+                        agregarMateriaACalificacionesDeAlumnos(materiaSeleccionada);
+                    } else {
+                        Toast.makeText(this, "No se pudo cargar la información de los alumnos.", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al cargar los datos de los alumnos.", Toast.LENGTH_SHORT).show();
+                    Log.e("ModifcarSecretarias", "Error al cargar los datos de los alumnos", e);
+                });
+            } else {
+                Toast.makeText(this, "Selecciona una materia y al menos un alumno.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void cargarMaterias() {
@@ -89,7 +133,6 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     listaMaterias.clear();
-
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String materia = document.getString("nombre"); // Asumiendo que cada documento tiene un campo "nombre"
                         if (materia != null) {
@@ -117,42 +160,21 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                 });
     }
 
-
-    private void validarMateria(String idProfesor, String nombreMateria, String nombreAlumno) {
-        DocumentReference materiaRef = mFirestore.collection("Profesores")
-                .document(idProfesor)
-                .collection("materias")
-                .document(nombreMateria);
-
-        // Validar si la materia ya existe
-        materiaRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (!documentSnapshot.exists()) {
-                // Si no existe, agregar la materia y luego el alumno
-                agregarMateria(idProfesor, nombreMateria);
-                agregarAlumno(nombreMateria, nombreAlumno, idProfesor);
-            } else {
-                // Si ya existe, solo agregar el alumno
-                agregarAlumno(nombreMateria, nombreAlumno, idProfesor);
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Error al validar la materia.", Toast.LENGTH_SHORT).show();
-            Log.e("ModifcarSecretarias", "Error al validar la materia", e);
-        });
-    }
-
-    private void agregarMateria(String idProfesor, String idMateria) {
-        CollectionReference addMateriaRef = mFirestore.collection("Profesores")
-                .document(idProfesor)
-                .collection("materias");
-
-        addMateriaRef.document(idMateria).set(new HashMap<>())
-                .addOnSuccessListener(aVoid -> {
-                    // Una vez creada la materia, agregarla a las calificaciones de los alumnos
-                    agregarMateriaACalificacionesDeAlumnos(idMateria);
+    private void cargarAlumnos() {
+        mFirestore.collection("Alumnos")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    listaAlumnos.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Alumno alumno = document.toObject(Alumno.class);
+                        alumno.setId(document.getId()); // Asegúrate de que tu modelo tenga un setter para el ID
+                        listaAlumnos.add(alumno);
+                    }
+                    alumnosAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al agregar la materia.", Toast.LENGTH_SHORT).show();
-                    Log.e("ModifcarSecretarias", "Error al agregar la materia", e);
+                    Toast.makeText(this, "Error al cargar los alumnos.", Toast.LENGTH_SHORT).show();
+                    Log.e("ModifcarSecretarias", "Error al cargar los alumnos", e);
                 });
     }
 
@@ -182,22 +204,48 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
         });
     }
 
-    private void agregarAlumno(String idMateria, String nombreAlumno, String idProfesor) {
+    private void agregarAlumnos(String idMateria, ArrayList<Alumno> alumnos, String idProfesor) {
+        // Referencia a la materia del profesor
         DocumentReference addStudent = mFirestore.collection("Profesores")
                 .document(idProfesor)
                 .collection("materias")
                 .document(idMateria);
 
-            String idAlumno = addStudent.getId() + "_" + System.currentTimeMillis();
-                addStudent.update("alumnos." + idAlumno, nombreAlumno)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Alumno registrado con éxito.", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Fallo al registrar Alumno.", Toast.LENGTH_SHORT).show());
+        // Obtener el documento de la materia
+        addStudent.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Si la materia ya existe, obtenemos el mapa de alumnos
+                        Map<String, Object> alumnosMap = (Map<String, Object>) documentSnapshot.get("alumnos");
+
+                        // Si el mapa de alumnos es nulo, inicialízalo
+                        if (alumnosMap == null) {
+                            alumnosMap = new HashMap<>();
+                        }
+
+                        // Iterar sobre los alumnos seleccionados y agregarlos al mapa
+                        for (Alumno alumno : alumnos) {
+                            // Generar un ID único para cada alumno basado en el ID de la materia y el tiempo actual
+                            String idAlumno = addStudent.getId() + "_" + System.currentTimeMillis();
+
+                            // Crear un mapa con los detalles del alumno
+                            Map<String, Object> alumnoMap = new HashMap<>();
+                            alumnoMap.put("nombre", alumno.getNombre());
+                            // Agregar el alumno al mapa
+                            alumnosMap.put(idAlumno, alumnoMap);
+                        }
+
+                        // Actualizar el documento de la materia con los nuevos alumnos
+                        addStudent.update("alumnos", alumnosMap);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("ModifcarSecretarias", "Error al agregar alumnos a la materia", e));
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(getApplicationContext(), Secretarias_materias_man.class));
+        startActivity(new Intent(getApplicationContext(), SecretariasActivity.class));
         finish();
     }
 }
