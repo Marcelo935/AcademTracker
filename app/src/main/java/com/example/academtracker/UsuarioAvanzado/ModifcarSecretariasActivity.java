@@ -236,11 +236,32 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                         }
 
                         // Actualizar el documento de la materia con los nuevos alumnos
-                        addStudent.update("alumnos", alumnosMap);
+                        addStudent.update("alumnos", alumnosMap)
+                                .addOnSuccessListener(aVoid -> Log.d("AgregarAlumnos", "Alumnos agregados correctamente"))
+                                .addOnFailureListener(e -> Log.e("AgregarAlumnos", "Error al actualizar alumnos", e));
+                    } else {
+                        // Si la materia no existe, se crea el documento con los alumnos seleccionados
+                        Map<String, Object> materiaData = new HashMap<>();
+                        Map<String, Object> alumnosMap = new HashMap<>();
+
+                        // Agregar alumnos al mapa
+                        for (Alumno alumno : alumnos) {
+                            String idAlumno = idMateria + "_" + System.currentTimeMillis();
+                            Map<String, Object> alumnoMap = new HashMap<>();
+                            alumnoMap.put("nombre", alumno.getNombre());
+                            alumnosMap.put(idAlumno, alumnoMap);
+                        }
+                        // Configurar datos de la materia
+                        materiaData.put("alumnos", alumnosMap);
+                        // Crear el documento de la materia
+                        addStudent.set(materiaData)
+                                .addOnSuccessListener(aVoid -> Log.d("AgregarAlumnos", "Materia creada correctamente con alumnos"))
+                                .addOnFailureListener(e -> Log.e("AgregarAlumnos", "Error al crear la materia", e));
                     }
                 })
-                .addOnFailureListener(e -> Log.e("ModifcarSecretarias", "Error al agregar alumnos a la materia", e));
+                .addOnFailureListener(e -> Log.e("AgregarAlumnos", "Error al verificar la materia", e));
     }
+
 
     @Override
     public void onBackPressed() {
