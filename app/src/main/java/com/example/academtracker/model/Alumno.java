@@ -3,6 +3,7 @@ package com.example.academtracker.model;
 public class Alumno {
     private String id;
     private String nombre;
+    private String grado;
 
     public Alumno() {} // Constructor vacío requerido por Firestore
 
@@ -20,6 +21,14 @@ public class Alumno {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getGrado() {
+        return grado;
+    }
+
+    public void setGrado(String grado) {
+        this.grado = grado;
     }
 }
 

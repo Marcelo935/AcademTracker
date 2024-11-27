@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SecretariasActivity extends AppCompatActivity {
 
-    MaterialButton perfil, modificar, actualizar, agregar, salir, lista, pagos;
+    MaterialButton perfil, modificar, actualizar, agregar, salir, lista, pagos, materias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +28,19 @@ public class SecretariasActivity extends AppCompatActivity {
         pagos = findViewById(R.id.pagosbtn);
         modificar = findViewById(R.id.modificarbtn);
         actualizar = findViewById(R.id.actualizarbtn);
+        materias = findViewById(R.id.materiasbtn);
         agregar = findViewById(R.id.agregarbtn);
         lista = findViewById(R.id.alumnos);
         salir = findViewById(R.id.salirbtn);
+
+        materias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SecretariasActivity.this, MateriasActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         pagos.setOnClickListener(new View.OnClickListener() {
             @Override

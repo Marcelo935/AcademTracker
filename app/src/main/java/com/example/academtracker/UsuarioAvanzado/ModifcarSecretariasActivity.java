@@ -231,6 +231,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                             // Crear un mapa con los detalles del alumno
                             Map<String, Object> alumnoMap = new HashMap<>();
                             alumnoMap.put("nombre", alumno.getNombre());
+                            alumnoMap.put("grado", alumno.getGrado());
                             // Agregar el alumno al mapa
                             alumnosMap.put(idAlumno, alumnoMap);
                         }
@@ -249,6 +250,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                             String idAlumno = idMateria + "_" + System.currentTimeMillis();
                             Map<String, Object> alumnoMap = new HashMap<>();
                             alumnoMap.put("nombre", alumno.getNombre());
+                            alumnoMap.put("grado", alumno.getGrado());
                             alumnosMap.put(idAlumno, alumnoMap);
                         }
                         // Configurar datos de la materia
@@ -261,7 +263,6 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Log.e("AgregarAlumnos", "Error al verificar la materia", e));
     }
-
 
     @Override
     public void onBackPressed() {

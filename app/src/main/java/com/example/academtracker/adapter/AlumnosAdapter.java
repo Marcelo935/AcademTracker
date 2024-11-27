@@ -13,9 +13,7 @@ import com.example.academtracker.R;
 import com.example.academtracker.model.Alumno;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+
 
 public class AlumnosAdapter extends RecyclerView.Adapter<AlumnosAdapter.AlumnoViewHolder> {
 
