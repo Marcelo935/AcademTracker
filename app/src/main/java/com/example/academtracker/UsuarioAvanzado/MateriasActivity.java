@@ -33,13 +33,13 @@ public class MateriasActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         // Agregar campos dinámicos al presionar el botón "Agregar Materia"
-        buttonAddField.setOnClickListener(v -> agregarCampoDinamico());
+        buttonAddField.setOnClickListener(v -> agregarCampo());
 
         // Guardar todas las materias al presionar "Guardar Todas las Materias"
         buttonSaveAll.setOnClickListener(v -> guardarMaterias());
     }
 
-    private void agregarCampoDinamico() {
+    private void agregarCampo() {
         // Crear un contenedor para cada conjunto de campos
         LinearLayout newFieldLayout = new LinearLayout(this);
         newFieldLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -112,7 +112,7 @@ public class MateriasActivity extends AppCompatActivity {
                                             });
                                 } else {
                                     // Si ya existe, mostrar un mensaje
-                                    Toast.makeText(this, "La materia con clave " + nombre + " ya existe.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this, "La materia con clave "+ clave + nombre + " ya existe.", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .addOnFailureListener(e -> {

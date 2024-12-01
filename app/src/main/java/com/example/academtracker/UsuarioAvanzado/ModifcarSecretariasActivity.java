@@ -18,6 +18,7 @@ import com.example.academtracker.R;
 import com.example.academtracker.adapter.AlumnosAdapter;
 import com.example.academtracker.model.Alumno;
 import com.example.academtracker.model.Alumnos;
+import com.example.academtracker.model.GradoItem;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
@@ -41,7 +42,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
     private RecyclerView recyclerViewAlumnos;
 
     private ArrayList<String> listaMaterias = new ArrayList<>();
-    private ArrayList<Alumno> listaAlumnos = new ArrayList<>();
+    private ArrayList<GradoItem> listaAlumnos = new ArrayList<>();
     private ArrayList<String> alumnosSeleccionados = new ArrayList<>();
     private String materiaSeleccionada;
     private AlumnosAdapter alumnosAdapter;
@@ -164,12 +165,56 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
         mFirestore.collection("Alumnos")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    listaAlumnos.clear();
+                    listaAlumnos.clear(); // Limpia la lista actual
+
+                    // Mapa para agrupar alumnos por grado y grupo
+                    Map<String, Map<String, List<Alumno>>> alumnosPorGradoYGrupo = new HashMap<>();
+
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Alumno alumno = document.toObject(Alumno.class);
-                        alumno.setId(document.getId()); // Asegúrate de que tu modelo tenga un setter para el ID
-                        listaAlumnos.add(alumno);
+                        alumno.setId(document.getId());
+
+                        // Obtener el grado y el grupo del alumno
+                        String grado = alumno.getGrado();
+                        String grupo = alumno.getGrupo(); // Asegúrate de que este campo exista en el modelo Alumno
+
+                        // Si el mapa de grado no contiene este grado, lo inicializamos
+                        if (!alumnosPorGradoYGrupo.containsKey(grado)) {
+                            alumnosPorGradoYGrupo.put(grado, new HashMap<>());
+                        }
+
+                        // Si el mapa de grupo no contiene este grupo, lo inicializamos
+                        if (!alumnosPorGradoYGrupo.get(grado).containsKey(grupo)) {
+                            alumnosPorGradoYGrupo.get(grado).put(grupo, new ArrayList<>());
+                        }
+
+                        // Agregar el alumno a la lista del grupo correspondiente
+                        alumnosPorGradoYGrupo.get(grado).get(grupo).add(alumno);
                     }
+
+                    // Crear la lista de GradoItem con encabezados y alumnos
+                    for (Map.Entry<String, Map<String, List<Alumno>>> entryGrado : alumnosPorGradoYGrupo.entrySet()) {
+                        String grado = entryGrado.getKey();
+                        Map<String, List<Alumno>> grupos = entryGrado.getValue();
+
+                        // Agregar un encabezado para este grado
+                        listaAlumnos.add(new GradoItem(grado, null, true));
+
+                        for (Map.Entry<String, List<Alumno>> entryGrupo : grupos.entrySet()) {
+                            String grupo = entryGrupo.getKey();
+                            List<Alumno> alumnosDelGrupo = entryGrupo.getValue();
+
+                            // Agregar un encabezado para este grupo dentro del grado
+                            listaAlumnos.add(new GradoItem(grupo, null, true));
+
+                            // Agregar cada alumno del grupo
+                            for (Alumno alumno : alumnosDelGrupo) {
+                                listaAlumnos.add(new GradoItem(null, alumno, false));
+                            }
+                        }
+                    }
+
+                    // Notificar al adaptador
                     alumnosAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
@@ -177,6 +222,8 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                     Log.e("ModifcarSecretarias", "Error al cargar los alumnos", e);
                 });
     }
+
+
 
     private void agregarMateriaACalificacionesDeAlumnos(String idMateria) {
         CollectionReference alumnosRef = mFirestore.collection("Alumnos");
