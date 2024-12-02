@@ -176,7 +176,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
 
                         // Obtener el grado y el grupo del alumno
                         String grado = alumno.getGrado();
-                        String grupo = alumno.getGrupo(); // Asegúrate de que este campo exista en el modelo Alumno
+                        String grupo = alumno.getGrupo();
 
                         // Si el mapa de grado no contiene este grado, lo inicializamos
                         if (!alumnosPorGradoYGrupo.containsKey(grado)) {
@@ -222,8 +222,6 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                     Log.e("ModifcarSecretarias", "Error al cargar los alumnos", e);
                 });
     }
-
-
 
     private void agregarMateriaACalificacionesDeAlumnos(String idMateria) {
         CollectionReference alumnosRef = mFirestore.collection("Alumnos");
