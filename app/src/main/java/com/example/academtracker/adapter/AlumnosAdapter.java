@@ -31,7 +31,7 @@ public class AlumnosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return listaItems.get(position).isHeader() ? TYPE_HEADER : TYPE_ITEM;
+        return listaItems.get(position).isEncabezado() ? TYPE_HEADER : TYPE_ITEM;
     }
 
     @NonNull

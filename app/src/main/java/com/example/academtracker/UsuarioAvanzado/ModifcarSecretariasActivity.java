@@ -73,6 +73,12 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 materiaSeleccionada = listaMaterias.get(position);
+
+                // Limpia la lista de alumnos seleccionados
+                alumnosSeleccionados.clear();
+
+                // Recarga todos los alumnos
+                cargarAlumnos();
             }
 
             @Override
@@ -84,22 +90,17 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
         // Listener del botón Guardar
         guardar.setOnClickListener(v -> {
             if (materiaSeleccionada != null && !alumnosSeleccionados.isEmpty()) {
-                // Crear una lista de tareas para obtener los documentos de los alumnos seleccionados
                 List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
 
-                // Obtener los documentos de los alumnos seleccionados
                 for (String alumnoId : alumnosSeleccionados) {
                     tasks.add(mFirestore.collection("Alumnos").document(alumnoId).get());
                 }
 
-                // Esperar que todas las tareas se completen
                 Tasks.whenAllSuccess(tasks).addOnSuccessListener(documentSnapshots -> {
-                    // Crear una lista de alumnos
                     ArrayList<Alumno> alumnosSeleccionadosList = new ArrayList<>();
 
-                    // Iterar sobre los resultados, que son de tipo Object
                     for (Object obj : documentSnapshots) {
-                        DocumentSnapshot documentSnapshot = (DocumentSnapshot) obj;  // Casting explícito a DocumentSnapshot
+                        DocumentSnapshot documentSnapshot = (DocumentSnapshot) obj;
                         if (documentSnapshot.exists()) {
                             Alumno alumno = documentSnapshot.toObject(Alumno.class);
                             if (alumno != null) {
@@ -108,14 +109,22 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Verificar cuántos alumnos se han agregado
-                    Log.d("ModifcarSecretarias", "Alumnos seleccionados: " + alumnosSeleccionadosList.size());
-
-                    // Llamar a la función para agregar los alumnos seleccionados
                     if (!alumnosSeleccionadosList.isEmpty()) {
                         agregarAlumnos(materiaSeleccionada, alumnosSeleccionadosList, uid);
-                        // Llamamos a la nueva función para agregar la materia a las calificaciones de los alumnos
                         agregarMateriaACalificacionesDeAlumnos(materiaSeleccionada);
+
+                        // Eliminar los alumnos seleccionados de la listaAlumnos
+                        listaAlumnos.removeIf(gradoItem ->
+                                !gradoItem.isEncabezado() &&
+                                        gradoItem.getAlumno() != null &&
+                                        alumnosSeleccionados.contains(gradoItem.getAlumno().getId())
+                        );
+
+                        // Limpiar la lista de seleccionados y actualizar la vista
+                        alumnosSeleccionados.clear();
+                        alumnosAdapter.notifyDataSetChanged();
+
+                        Toast.makeText(this, "Alumnos agregados correctamente.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "No se pudo cargar la información de los alumnos.", Toast.LENGTH_SHORT).show();
                     }
@@ -167,7 +176,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     listaAlumnos.clear(); // Limpia la lista actual
 
-                    // Mapa para agrupar alumnos por grado y grupo
+                    // Agrupar alumnos por grado y grupo
                     Map<String, Map<String, List<Alumno>>> alumnosPorGradoYGrupo = new HashMap<>();
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {

@@ -1,15 +1,15 @@
 package com.example.academtracker.model;
 
 public class GradoItem {
-    private String grado; // El nombre del grado (para encabezados)
-    private Alumno alumno; // Un objeto Alumno (para elementos normales)
-    private boolean isHeader; // Bandera para determinar si este es un encabezado
+    private String grado;
+    private Alumno alumno;
+    private boolean isEncabezado; // Cambiar el nombre para mayor claridad
 
     // Constructor
-    public GradoItem(String grado, Alumno alumno, boolean isHeader) {
+    public GradoItem(String grado, Alumno alumno, boolean isEncabezado) {
         this.grado = grado;
         this.alumno = alumno;
-        this.isHeader = isHeader;
+        this.isEncabezado = isEncabezado;
     }
 
     // Getter para el grado (se usa en encabezados)
@@ -23,7 +23,12 @@ public class GradoItem {
     }
 
     // Getter para determinar si este es un encabezado
-    public boolean isHeader() {
-        return isHeader;
+    public boolean isEncabezado() { // Cambiar el nombre para mayor claridad
+        return isEncabezado;
+    }
+
+    // Setter para isEncabezado (opcional, si se necesita cambiar en tiempo de ejecución)
+    public void setEncabezado(boolean isEncabezado) {
+        this.isEncabezado = isEncabezado;
     }
 }
