@@ -25,7 +25,7 @@ public class AlumnoActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     TextView nombrealumno;
 
-    MaterialButton perfil,listaprofesores,estadistica,salir;
+    MaterialButton perfil,listaprofesores,estadistica,salir,listapagos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +33,10 @@ public class AlumnoActivity extends AppCompatActivity {
         setContentView(R.layout.usuariobasico_alumnos);
 
         perfil = findViewById(R.id.perfilbtn);
-        nombrealumno = findViewById(R.id.nombrealumno);
         listaprofesores = findViewById(R.id.profesoresbtn);
         estadistica = findViewById(R.id.statsbtn);
         salir = findViewById(R.id.salirbtn);
+        listapagos = findViewById(R.id.pagosbtn);
 
 
         perfil.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +53,16 @@ public class AlumnoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AlumnoActivity.this, ListaprofesoresActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
+
+        listapagos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AlumnoActivity.this, MostrarPagosActivity.class);
                 startActivity(intent);
                 finish();
             }

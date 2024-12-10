@@ -4,13 +4,13 @@ public class Pagos {
     String alumnoId;
     String fecha;
     String metodoPago;
-    String monto;
+    Double monto;
 
     public Pagos(){
 
     }
 
-    public Pagos (String alumnoId, String fecha, String metodoPago, String monto){
+    public Pagos (String alumnoId, String fecha, String metodoPago, Double monto){
         this.alumnoId = alumnoId;
         this.fecha = fecha;
         this.metodoPago = metodoPago;
@@ -41,11 +41,11 @@ public class Pagos {
         this.metodoPago = metodoPago;
     }
 
-    public String getMonto() {
+    public Double getMonto() {
         return monto;
     }
 
-    public void setMonto(String monto) {
+    public void setMonto(Double monto) {
         this.monto = monto;
     }
 

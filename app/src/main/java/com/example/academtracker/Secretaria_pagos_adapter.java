@@ -33,7 +33,7 @@ public class Secretaria_pagos_adapter extends FirestoreRecyclerAdapter<Pagos,Sec
         Log.d("ACTALUM", "Nombres de los alumnos: " + pagos.getAlumnoId());
         viewHolder.Correo.setText(pagos.getAlumnoId());
         viewHolder.MetodoPago.setText(pagos.getMetodoPago());
-        viewHolder.Monto.setText(pagos.getMonto());
+        viewHolder.Monto.setText(String.valueOf(pagos.getMonto()));
         viewHolder.Fecha.setText(pagos.getFecha());
     }
 

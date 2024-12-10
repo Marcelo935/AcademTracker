@@ -21,16 +21,15 @@
         android:hint="Monto"
         android:inputType="numberDecimal"
         android:layout_below="@id/tituloRegistroPagos"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
-    <!-- Campo para el método de pago -->
-    <EditText
-        android:id="@+id/etMetodoPago"
+    <!-- Spinner para el método de pago -->
+    <Spinner
+        android:id="@+id/spMetodoPago"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Método de pago"
         android:layout_below="@id/etMonto"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
     <!-- Campo para la fecha -->
     <EditText
@@ -38,8 +37,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Fecha"
-        android:layout_below="@id/etMetodoPago"
-        android:layout_marginTop="16dp"/>
+        android:focusable="false"
+        android:layout_below="@id/spMetodoPago"
+        android:layout_marginTop="16dp" />
 
     <!-- Campo para el ID del alumno -->
     <EditText
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:hint="Correo del Alumno"
         android:layout_below="@id/etFecha"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
     <!-- Botón para registrar el pago -->
     <Button
@@ -57,14 +57,14 @@
         android:layout_height="wrap_content"
         android:text="Registrar Pago"
         android:layout_below="@id/etAlumnoId"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
+    <!-- Botón para ver los pagos -->
     <Button
         android:id="@+id/btnVerPagos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etAlumnoId"
-        android:layout_marginTop="80dp"
+        android:layout_below="@id/btnRegistrarPago"
+        android:layout_marginTop="16dp"
         android:text="Ver pagos" />
 </RelativeLayout>
-
