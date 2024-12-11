@@ -25,6 +25,12 @@
         android:theme="@style/Theme.AcademTracker"
         tools:targetApi="31">
         <activity
+            android:name=".UsuarioBasico.MostrarPagosActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.academtracker.UsuarioBasico.MateriasAlumnosActivity"
+            android:exported="false" />
+        <activity
             android:name=".UsuarioAvanzado.MateriasActivity"
             android:exported="false" />
         <activity

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.academtracker.LoginActivity;
 import com.example.academtracker.R;
-import com.example.academtracker.UserActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
@@ -25,7 +24,7 @@ public class AlumnoActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     TextView nombrealumno;
 
-    MaterialButton perfil,listaprofesores,estadistica,salir,listapagos;
+    MaterialButton perfil,listaprofesores,estadistica,salir,listapagos,calificaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +36,23 @@ public class AlumnoActivity extends AppCompatActivity {
         estadistica = findViewById(R.id.statsbtn);
         salir = findViewById(R.id.salirbtn);
         listapagos = findViewById(R.id.pagosbtn);
+        calificaciones = findViewById(R.id.calificacionesbtn);
 
 
         perfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AlumnoActivity.this, PerfilAlumnoActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
+
+        calificaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AlumnoActivity.this, MateriasAlumnosActivity.class);
                 startActivity(intent);
                 finish();
             }
