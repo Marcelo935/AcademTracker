@@ -103,7 +103,7 @@ public class RegistropagosActivity extends AppCompatActivity {
         }
 
         // Validar que el monto sea un número válido
-        double monto = 0;
+        double monto;
         try {
             monto = Double.parseDouble(montoString);
         } catch (NumberFormatException e) {
@@ -111,25 +111,32 @@ public class RegistropagosActivity extends AppCompatActivity {
             return;
         }
 
-        // Crear un objeto Payment para almacenar los datos del pago
-        Payment payment = new Payment(monto, metodoPagoSeleccionado, fecha, alumnoId);
+        // Validar que el alumnoId existe en Firestore
+        db.collection("Alumnos").document(alumnoId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                // Si el alumno existe, proceder con el registro del pago
+                Payment payment = new Payment(monto, metodoPagoSeleccionado, fecha, alumnoId);
 
-        // Guardar el pago en Firestore
-        db.collection("Pagos")
-                .add(payment)
-                .addOnSuccessListener(documentReference -> {
-                    // Pago guardado exitosamente
-                    Toast.makeText(RegistropagosActivity.this, "Pago registrado exitosamente", Toast.LENGTH_SHORT).show();
-                    // Limpiar los campos
-                    etMonto.setText("");
-                    etFecha.setText("");
-                    etAlumnoId.setText("");
-                    spMetodoPago.setSelection(0);
-                })
-                .addOnFailureListener(e -> {
-                    // Error al guardar el pago
-                    Toast.makeText(RegistropagosActivity.this, "Error al registrar el pago", Toast.LENGTH_SHORT).show();
-                });
+                db.collection("Pagos")
+                        .add(payment)
+                        .addOnSuccessListener(documentReference -> {
+                            Toast.makeText(RegistropagosActivity.this, "Pago registrado exitosamente", Toast.LENGTH_SHORT).show();
+                            // Limpiar los campos
+                            etMonto.setText("");
+                            etFecha.setText("");
+                            etAlumnoId.setText("");
+                            spMetodoPago.setSelection(0);
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(RegistropagosActivity.this, "Error al registrar el pago", Toast.LENGTH_SHORT).show();
+                        });
+            } else {
+                // Si el alumno no existe, mostrar un mensaje de error
+                Toast.makeText(RegistropagosActivity.this, "El ID del alumno no está registrado", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(RegistropagosActivity.this, "Error al verificar el ID del alumno", Toast.LENGTH_SHORT).show();
+        });
     }
 
     public static class Payment {

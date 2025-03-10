@@ -6,7 +6,14 @@ public class Alumno {
     private String grado;
     private String grupo;
 
-    public Alumno() {} // Constructor vacío requerido por Firestore
+    public Alumno() {}
+
+    public Alumno(String id,String nombre, String grado, String grupo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.grado = grado;
+        this.grupo = grupo;
+    }
 
     public String getId() {
         return id;

@@ -28,23 +28,21 @@ public class MostrarPagosActivity extends AppCompatActivity {
     private AlumnosPagos_adapter adapter;
     private ArrayList<Pagos> pagosList;
     private String alumnoId;
-    private TextView tvEmptyMessage; // Asegúrate de que esta variable sea de tipo TextView
+    private TextView tvEmptyMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_pagos);
 
-        // Inicializar Firestore y la vista
         db = FirebaseFirestore.getInstance();
         recyclerViewPagos = findViewById(R.id.recyclerViewPagos);
-        tvEmptyMessage = findViewById(R.id.tvEmptyMessage); // Esta línea debería funcionar sin errores
+        tvEmptyMessage = findViewById(R.id.tvEmptyMessage);
         pagosList = new ArrayList<>();
 
         // Obtener el correo del usuario autenticado
         alumnoId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-        // Configurar RecyclerView
         recyclerViewPagos.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AlumnosPagos_adapter(pagosList);
         recyclerViewPagos.setAdapter(adapter);
@@ -58,7 +56,7 @@ public class MostrarPagosActivity extends AppCompatActivity {
     }
 
     private void mostrarPagos(String alumnoId) {
-        // Consultar la colección de Pagos donde el campo alumnoId coincida con el email del alumno
+        // Consulta la colección de Pagos donde el campo alumnoId coincida con el email del alumno
         db.collection("Pagos")
                 .whereEqualTo("alumnoId", alumnoId)
                 .get()

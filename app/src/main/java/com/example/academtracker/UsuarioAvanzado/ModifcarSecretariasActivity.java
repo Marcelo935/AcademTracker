@@ -144,7 +144,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     listaMaterias.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        String materia = document.getString("nombre"); // Asumiendo que cada documento tiene un campo "nombre"
+                        String materia = document.getString("nombre");
                         if (materia != null) {
                             listaMaterias.add(materia);
                         }
@@ -286,6 +286,7 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
                             Map<String, Object> alumnoMap = new HashMap<>();
                             alumnoMap.put("nombre", alumno.getNombre());
                             alumnoMap.put("grado", alumno.getGrado());
+                            alumnoMap.put("grupo", alumno.getGrupo());
                             // Agregar el alumno al mapa
                             alumnosMap.put(idAlumno, alumnoMap);
                         }
@@ -301,10 +302,11 @@ public class ModifcarSecretariasActivity extends AppCompatActivity {
 
                         // Agregar alumnos al mapa
                         for (Alumno alumno : alumnos) {
-                            String idAlumno = idMateria + "_" + System.currentTimeMillis();
+                            String idAlumno = addStudent.getId() + "_" + System.currentTimeMillis();
                             Map<String, Object> alumnoMap = new HashMap<>();
                             alumnoMap.put("nombre", alumno.getNombre());
                             alumnoMap.put("grado", alumno.getGrado());
+                            alumnoMap.put("grupo", alumno.getGrupo());
                             alumnosMap.put(idAlumno, alumnoMap);
                         }
                         // Configurar datos de la materia

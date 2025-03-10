@@ -36,7 +36,7 @@ public class MateriasAlumnosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_materias_alumnos); // Se corrigió el nombre del XML
+        setContentView(R.layout.activity_materias_alumnos);
 
         recyclerView = findViewById(R.id.recyclerViewMaterias);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

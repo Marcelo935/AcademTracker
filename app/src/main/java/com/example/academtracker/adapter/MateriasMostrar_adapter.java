@@ -44,7 +44,7 @@ public class MateriasMostrar_adapter extends RecyclerView.Adapter<MateriasMostra
         if (calificaciones != null && !calificaciones.isEmpty()) {
             // Iterar sobre todas las claves (parciales) del mapa de calificaciones
             for (Map.Entry<String, Double> entry : calificaciones.entrySet()) {
-                calificacionesTexto.append("Parcial ").append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+                calificacionesTexto.append("").append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
             }
         } else {
             calificacionesTexto.append("Sin calificaciones disponibles.");
