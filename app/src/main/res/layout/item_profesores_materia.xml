@@ -1,15 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/nombreTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nombre de la Materia"
-        android:textSize="19dp" />
-</LinearLayout>
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="start|top">
+
+        <!-- Título de la materia -->
+        <TextView
+            android:id="@+id/nombreTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre de la Materia"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Descripción de los alumnos -->
+        <TextView
+            android:id="@+id/alumnosTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Alumnos: "
+            android:textSize="16sp"
+            android:textColor="#555555"
+            android:paddingTop="4dp"/>
+
+        <!-- Lista de alumnos con línea separadora -->
+        <LinearLayout
+            android:id="@+id/linearLayoutAlumnos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="4dp"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

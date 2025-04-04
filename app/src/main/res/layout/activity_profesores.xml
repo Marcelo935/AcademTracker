@@ -10,35 +10,24 @@
         android:id="@+id/profesorestext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="168dp"
-        android:layout_marginEnd="174dp"
-        android:layout_marginBottom="678dp"
-        android:text="Profesores"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="LISTA DE PROFESORES"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/viewprofesores"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/returnbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="REGRESAR"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="70dp" />
+        android:layout_marginTop="32dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewprofesores"
-        android:layout_width="260dp"
-        android:layout_height="382dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="94dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="84dp"
-        app:layout_constraintBottom_toTopOf="@+id/returnbtn"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/profesorestext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profesorestext" />
 

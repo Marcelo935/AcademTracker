@@ -15,16 +15,17 @@ import com.example.academtracker.adapter.MateriasProfesoresAdapter;
 import com.example.academtracker.model.Materias;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ListaMateriasActivity extends AppCompatActivity {
 
@@ -71,61 +72,70 @@ public class ListaMateriasActivity extends AppCompatActivity {
         }
 
         // Acción del botón regresar
-        regresarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ListaMateriasActivity.this, ProfesorActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        regresarButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ListaMateriasActivity.this, ProfesorActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 
     private void cargarMaterias(String profesorEmail) {
-        // Referencia a la subcolección "materias" dentro del documento del profesor
         CollectionReference materiasRef = db.collection("Profesores")
                 .document(profesorEmail)
                 .collection("materias");
 
-        // Consultar Firestore para obtener las materias
         materiasRef.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
-                        // Verifica si no está vacío
-                        if (queryDocumentSnapshots.isEmpty()) {
-                            Log.e("ListaMateriasActivity", "No se encontraron materias.");
-                        } else {
-                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                                // Obtener el nombre de la materia del ID del documento
-                                String nombreMateria = document.getId(); // El ID es el nombre de la materia
-                                String grado = document.getString("grado");
-                                String grupo = document.getString("grupo");
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        Log.e("ListaMateriasActivity", "No se encontraron materias.");
+                    } else {
+                        materiasList.clear(); // Limpiar lista antes de agregar nuevos datos
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            final String nombreMateria = document.getId();
+                            final String grado = document.getString("grado") != null ? document.getString("grado") : "No disponible";
+                            final String grupo = document.getString("grupo") != null ? document.getString("grupo") : "No disponible";
 
-                                // Verificar los valores obtenidos
-                                Log.d("ListaMateriasActivity", "Materia: " + nombreMateria + ", Grado: " + grado + ", Grupo: " + grupo);
+                            // Obtener los alumnos almacenados en el mapa dentro de Firestore
+                            List<String> listaAlumnos = new ArrayList<>();
+                            Map<String, Object> alumnosMap = (Map<String, Object>) document.get("alumnos");
 
-                                // Si los datos son nulos, asignar valores predeterminados
-                                if (grado == null) grado = "No disponible";
-                                if (grupo == null) grupo = "No disponible";
+                            if (alumnosMap != null) {
+                                // Iterar sobre los alumnos en el mapa
+                                for (Map.Entry<String, Object> entry : alumnosMap.entrySet()) {
+                                    // Cada entry es un alumno con su id como clave
+                                    Map<String, Object> alumnoDetalles = (Map<String, Object>) entry.getValue();
 
-                                // Crear un objeto Materias y agregarlo a la lista
-                                Materias materia = new Materias(nombreMateria, grado, grupo);
+                                    // Obtener nombre, grado y grupo del alumno
+                                    String nombreAlumno = (String) alumnoDetalles.get("nombre");
+                                    String gradoAlumno = (String) alumnoDetalles.get("grado");
+                                    String grupoAlumno = (String) alumnoDetalles.get("grupo");
+
+                                    // Si los valores no están disponibles, asignar "No disponible"
+                                    nombreAlumno = nombreAlumno != null ? nombreAlumno : "No disponible";
+                                    gradoAlumno = gradoAlumno != null ? gradoAlumno : "No disponible";
+                                    grupoAlumno = grupoAlumno != null ? grupoAlumno : "No disponible";
+
+                                    // Formatear el detalle del alumno con saltos de línea
+                                    String alumnoDetalle = "\n" + "Nombre: " + nombreAlumno + "\n" +
+                                            "Grado: " + gradoAlumno + "\n" +
+                                            "Grupo: " + grupoAlumno + "\n";
+
+                                    // Agregar el detalle del alumno a la lista
+                                    listaAlumnos.add(alumnoDetalle);
+                                }
+
+                                // Crear objeto Materias con la lista de alumnos
+                                Materias materia = new Materias(nombreMateria, grado, grupo, listaAlumnos);
                                 materiasList.add(materia);
-                            }
 
-                            // Configurar el adaptador con los datos obtenidos
-                            adapter.notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
+                                // Notificar al adaptador una vez que los detalles estén obtenidos
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Log.e("ListaMateriasActivity", "El mapa de alumnos está vacío o no existe.");
+                            }
                         }
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("ListaMateriasActivity", "Error al obtener materias", e);
-                    }
-                });
+                .addOnFailureListener(e -> Log.e("ListaMateriasActivity", "Error al obtener materias", e));
     }
-
 }
-

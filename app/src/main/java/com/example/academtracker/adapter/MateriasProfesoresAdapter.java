@@ -41,6 +41,13 @@ public class MateriasProfesoresAdapter extends RecyclerView.Adapter<MateriasProf
         // Validar datos antes de asignarlos
         if (materia != null) {
             holder.nombreTextView.setText(materia.getNombre() != null ? materia.getNombre() : "Sin nombre");
+
+            // Mostrar la lista de alumnos
+            if (materia.getAlumnos() != null && !materia.getAlumnos().isEmpty()) {
+                holder.alumnosTextView.setText("Alumnos: " + String.join(", ", materia.getAlumnos()));
+            } else {
+                holder.alumnosTextView.setText("Alumnos: No registrados");
+            }
         }
     }
 
@@ -53,13 +60,14 @@ public class MateriasProfesoresAdapter extends RecyclerView.Adapter<MateriasProf
     public class MateriaViewHolder extends RecyclerView.ViewHolder {
 
         // Declarar los TextView
-        TextView nombreTextView;
+        TextView nombreTextView, alumnosTextView;
 
         public MateriaViewHolder(@NonNull View itemView) {
             super(itemView);
 
             // Vincular las vistas con sus IDs
             nombreTextView = itemView.findViewById(R.id.nombreTextView);
+            alumnosTextView = itemView.findViewById(R.id.alumnosTextView);
         }
     }
 }

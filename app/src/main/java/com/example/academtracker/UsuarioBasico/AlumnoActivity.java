@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,15 +23,22 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class AlumnoActivity extends AppCompatActivity {
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     TextView nombrealumno;
 
-    MaterialButton perfil,listaprofesores,estadistica,salir,listapagos,calificaciones;
+    MaterialButton perfil, listaprofesores, estadistica, salir, listapagos, calificaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.usuariobasico_alumnos);
 
+        // Inicializar Firebase
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // Inicializar elementos del layout
+        nombrealumno = findViewById(R.id.nombrealumno);
         perfil = findViewById(R.id.perfilbtn);
         listaprofesores = findViewById(R.id.profesoresbtn);
         estadistica = findViewById(R.id.statsbtn);
@@ -38,94 +46,72 @@ public class AlumnoActivity extends AppCompatActivity {
         listapagos = findViewById(R.id.pagosbtn);
         calificaciones = findViewById(R.id.calificacionesbtn);
 
+        // Obtener usuario logueado
+        FirebaseUser usuarioActual = mAuth.getCurrentUser();
+        if (usuarioActual != null) {
+            String alumnoEmail = usuarioActual.getEmail();
 
-        perfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AlumnoActivity.this, PerfilAlumnoActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            // Obtener el nombre del alumno desde Firestore
+            db.collection("Alumnos").document(alumnoEmail).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String nombreAlumno = documentSnapshot.getString("nombre");
+                            nombrealumno.setText(nombreAlumno); // Mostrar nombre en el TextView
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Manejar error
+                    });
+        }
 
+        // Setear los OnClickListeners para los botones
+        perfil.setOnClickListener(v -> {
+            Intent intent = new Intent(AlumnoActivity.this, PerfilAlumnoActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        calificaciones.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AlumnoActivity.this, MateriasAlumnosActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
+        calificaciones.setOnClickListener(v -> {
+            Intent intent = new Intent(AlumnoActivity.this, MateriasAlumnosActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        listaprofesores.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AlumnoActivity.this, ListaprofesoresActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
+        listaprofesores.setOnClickListener(v -> {
+            Intent intent = new Intent(AlumnoActivity.this, ListaprofesoresActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        listapagos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AlumnoActivity.this, MostrarPagosActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
+        listapagos.setOnClickListener(v -> {
+            Intent intent = new Intent(AlumnoActivity.this, MostrarPagosActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        estadistica.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db = FirebaseFirestore.getInstance();
-                // Obtener referencia a la colección
-                CollectionReference collectionReference = db.collection("Alumnos");
+        estadistica.setOnClickListener(v -> {
+            db.collection("Alumnos").get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        String Grado = "";
+                        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                            Grado = document.getString("grado");
 
-                // Realizar la consulta
-                collectionReference.get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(@NonNull QuerySnapshot querySnapshot) {
-
-                                String Grado = "";
-                                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-
-                                    //Intent intent = new Intent(LoginActivity.this, UserActivity.class);
-                                    Grado = document.getString("grado");
-
-                                    Intent intent = new Intent(AlumnoActivity.this, EstadisticasActivity.class);
-                                    intent.putExtra("Grado",Grado);//Mandamos el valor de la variable al perfil de alumnos
-                                    startActivity(intent);
-                                    finish();
-
-                                }
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                            }
-                        });
-            }
-
+                            Intent intent = new Intent(AlumnoActivity.this, EstadisticasActivity.class);
+                            intent.putExtra("Grado", Grado);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Manejar error
+                    });
         });
 
-        salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(AlumnoActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        salir.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(AlumnoActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
-
-}
-
+    }
 }
