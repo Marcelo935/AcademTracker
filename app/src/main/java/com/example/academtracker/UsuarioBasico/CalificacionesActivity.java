@@ -59,7 +59,7 @@ public class CalificacionesActivity extends AppCompatActivity {
                             materias.clear();
 
                             for (DocumentSnapshot document : queryDocumentSnapshots) {
-                                String nombre = document.getId(); // El ID del documento será el nombre de la materia
+                                String nombre = document.getId();
                                 materias.add(new Materia(nombre, "", "", ""));
                             }
 

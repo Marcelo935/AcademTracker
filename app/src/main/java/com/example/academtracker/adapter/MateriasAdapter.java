@@ -1,5 +1,6 @@
 package com.example.academtracker.adapter;
 
+import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.academtracker.R;
 import com.example.academtracker.model.Materia;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -25,7 +27,6 @@ public class MateriasAdapter extends RecyclerView.Adapter<MateriasAdapter.Materi
     private FirebaseFirestore firestore;
     private String uid;
 
-    // Constructor
     public MateriasAdapter(List<Materia> materias, FirebaseFirestore firestore, String uid) {
         this.materias = materias;
         this.firestore = firestore;
@@ -43,13 +44,11 @@ public class MateriasAdapter extends RecyclerView.Adapter<MateriasAdapter.Materi
     public void onBindViewHolder(@NonNull MateriaViewHolder holder, int position) {
         Materia materia = materias.get(position);
 
-        // Asignar datos
         holder.nombre.setText(materia.getNombre());
         holder.etParcial1.setText(materia.getParcial1());
         holder.etParcial2.setText(materia.getParcial2());
         holder.etParcial3.setText(materia.getParcial3());
 
-        // Evento para el botón guardar
         holder.guardarButton.setOnClickListener(v -> {
             String parcial1 = holder.etParcial1.getText().toString();
             String parcial2 = holder.etParcial2.getText().toString();
@@ -61,28 +60,56 @@ public class MateriasAdapter extends RecyclerView.Adapter<MateriasAdapter.Materi
             }
 
             Map<String, Object> updates = new HashMap<>();
-            if (!parcial1.isEmpty()) {
-                updates.put("1er parcial", parcial1);
-            }
-            if (!parcial2.isEmpty()) {
-                updates.put("2do parcial", parcial2);
-            }
-            if (!parcial3.isEmpty()) {
-                updates.put("3er parcial", parcial3);
+            if (!parcial1.isEmpty()) updates.put("1er parcial", parcial1);
+            if (!parcial2.isEmpty()) updates.put("2do parcial", parcial2);
+            if (!parcial3.isEmpty()) updates.put("3er parcial", parcial3);
+
+            if (updates.isEmpty()) {
+                Toast.makeText(holder.itemView.getContext(), "No hay datos para actualizar", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            if (!updates.isEmpty()) {
-                firestore.collection("Alumnos")
-                        .document(uid)
-                        .collection("calificaciones")
-                        .document(materia.getNombre())
-                        .update(updates)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(holder.itemView.getContext(), "Calificaciones guardadas", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(holder.itemView.getContext(), "Error al guardar", Toast.LENGTH_SHORT).show());
-            } else {
-                Toast.makeText(holder.itemView.getContext(), "No hay datos para actualizar", Toast.LENGTH_SHORT).show();
-            }
+            firestore.collection("Alumnos")
+                    .document(uid)
+                    .collection("calificaciones")
+                    .document(materia.getNombre())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        boolean hayDatosPrevios = false;
+
+                        Object p1 = documentSnapshot.get("1er parcial");
+                        Object p2 = documentSnapshot.get("2do parcial");
+                        Object p3 = documentSnapshot.get("3er parcial");
+
+                        if (!parcial1.isEmpty() && p1 != null && !p1.toString().equals("0")) hayDatosPrevios = true;
+                        if (!parcial2.isEmpty() && p2 != null && !p2.toString().equals("0")) hayDatosPrevios = true;
+                        if (!parcial3.isEmpty() && p3 != null && !p3.toString().equals("0")) hayDatosPrevios = true;
+
+                        if (hayDatosPrevios) {
+                            new AlertDialog.Builder(holder.itemView.getContext())
+                                    .setTitle("Calificación existente")
+                                    .setMessage("Ya hay calificaciones guardadas. ¿Deseas modificarlas?")
+                                    .setPositiveButton("Sí", (dialog, which) -> guardarCalificaciones(holder, updates, materia.getNombre()))
+                                    .setNegativeButton("No", null)
+                                    .show();
+                        } else {
+                            guardarCalificaciones(holder, updates, materia.getNombre());
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(holder.itemView.getContext(), "Error al verificar datos existentes", Toast.LENGTH_SHORT).show();
+                    });
         });
+    }
+
+    private void guardarCalificaciones(MateriaViewHolder holder, Map<String, Object> updates, String materiaNombre) {
+        firestore.collection("Alumnos")
+                .document(uid)
+                .collection("calificaciones")
+                .document(materiaNombre)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> Toast.makeText(holder.itemView.getContext(), "Calificaciones guardadas", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(holder.itemView.getContext(), "Error al guardar", Toast.LENGTH_SHORT).show());
     }
 
     @Override
