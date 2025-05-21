@@ -28,7 +28,7 @@ public class ProfesorActivity extends AppCompatActivity {
 
     TextView nombreprofesor;
 
-    MaterialButton perfil,listamaterias,calificaciones,asistencias,salir;
+    MaterialButton perfil,listamaterias,calificaciones,asistencias,salir, registromaterias;
     private FirebaseFirestore db; // Agrega la instancia de FirebaseFirestore
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,7 @@ public class ProfesorActivity extends AppCompatActivity {
         calificaciones = findViewById(R.id.califbtn);
         asistencias = findViewById(R.id.asistenciasbtn);
         salir = findViewById(R.id.salirbtn);
+        registromaterias = findViewById(R.id.asistenciasregbtn);
 
         perfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +56,16 @@ public class ProfesorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfesorActivity.this, ListaMateriasActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
+
+        registromaterias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfesorActivity.this, VerAsistenciasActivity.class);
                 startActivity(intent);
                 finish();
             }

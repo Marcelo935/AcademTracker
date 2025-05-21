@@ -45,9 +45,9 @@ public class MateriasAdapter extends RecyclerView.Adapter<MateriasAdapter.Materi
         Materia materia = materias.get(position);
 
         holder.nombre.setText(materia.getNombre());
-        holder.etParcial1.setText(materia.getParcial1());
-        holder.etParcial2.setText(materia.getParcial2());
-        holder.etParcial3.setText(materia.getParcial3());
+        holder.etParcial1.setText(String.valueOf(materia.getParcial1()));
+        holder.etParcial2.setText(String.valueOf(materia.getParcial2()));
+        holder.etParcial3.setText(String.valueOf(materia.getParcial3()));
 
         holder.guardarButton.setOnClickListener(v -> {
             String parcial1 = holder.etParcial1.getText().toString();

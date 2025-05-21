@@ -2,111 +2,130 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navDrawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/navDrawer"
     tools:context=".UsuarioBasico.PerfilAlumnoActivity">
 
-    <!-- Añadir el Toolbar aquí -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <!-- Contenido principal -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/returnbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="REGRESAR"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="70dp" />
+        <!-- Contenido -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <!-- ImageView -->
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="21dp"
-            tools:srcCompat="@tools:sample/avatars" />
+            <!-- Imagen -->
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="21dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
-        <!-- Nombre Value TextView -->
-        <TextView
-            android:id="@+id/nombrecompleto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Nombre"
-            app:layout_constraintTop_toBottomOf="@id/imageView2"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="40dp"
-            android:layout_marginStart="16dp" />
+            <!-- Nombre -->
+            <TextView
+                android:id="@+id/nombrecompleto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Nombre"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toBottomOf="@id/imageView2"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Email Value TextView -->
-        <TextView
-            android:id="@+id/emailprofesor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            app:layout_constraintTop_toBottomOf="@id/nombrecompleto"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="16dp" />
+            <!-- Email -->
+            <TextView
+                android:id="@+id/emailprofesor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toBottomOf="@id/nombrecompleto"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/QRbuttonGeo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="QR Geografia"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.232"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emailprofesor" />
+            <!-- ScrollView con botones dinámicos -->
+            <ScrollView
+                android:id="@+id/scrollViewMaterias"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintTop_toBottomOf="@id/emailprofesor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/btnRegistrarInasistencias">
 
-        <Button
-            android:id="@+id/QRbuttonAlg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="QR Aglebra"
-            app:layout_constraintTop_toBottomOf="@id/QRbuttonGeo"
-            app:layout_constraintStart_toStartOf="@+id/QRbuttonGeo"/>
+                <LinearLayout
+                    android:id="@+id/contenedorMaterias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp" />
+            </ScrollView>
 
-        <Button
-            android:id="@+id/QRbuttonHist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="QR Historia"
-            app:layout_constraintTop_toBottomOf="@id/QRbuttonAlg"
-            app:layout_constraintStart_toStartOf="@+id/QRbuttonAlg" />
+            <!-- Botón Registrar Inasistencias -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegistrarInasistencias"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Registrar Inasistencias"
+                android:visibility="gone"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintTop_toBottomOf="@id/scrollViewMaterias"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/any_chart_view" />
 
-        <Button
-            android:id="@+id/NFCbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="56dp"
-            android:text="NFC"
-            app:layout_constraintStart_toEndOf="@+id/QRbuttonGeo"
-            app:layout_constraintTop_toTopOf="@id/QRbuttonGeo" />
+            <!-- Vista para gráfica -->
+            <com.anychart.AnyChartView
+                android:id="@+id/any_chart_view"
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:visibility="visible"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/btnRegistrarInasistencias"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/returnbtn" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Botón Regresar -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/returnbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="REGRESAR"
+                android:layout_marginBottom="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/drawer_menu"
-        app:headerLayout="@layout/nav_header"/>
+        app:headerLayout="@layout/nav_header" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

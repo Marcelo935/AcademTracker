@@ -15,6 +15,7 @@
 
     <application
         android:allowBackup="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
@@ -23,12 +24,19 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AcademTracker"
+        tools:replace="android:appComponentFactory"
         tools:targetApi="31">
+        <activity
+            android:name=".UsuarioBasico.ResultadoPromedioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UsuarioBasico.VerAsistenciasActivity"
+            android:exported="false" />
         <activity
             android:name=".UsuarioBasico.MostrarPagosActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.academtracker.UsuarioBasico.MateriasAlumnosActivity"
+            android:name=".UsuarioBasico.MateriasAlumnosActivity"
             android:exported="false" />
         <activity
             android:name=".UsuarioAvanzado.MateriasActivity"
@@ -115,12 +123,6 @@
             android:name=".DirectorActualizaAlumnos_man"
             android:exported="false" />
         <activity
-            android:name=".UsuarioMedio.ListaAlumnosActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UsuarioMedio.ListaDirectorAlumnosActivity"
-            android:exported="false" />
-        <activity
             android:name=".UsuarioMedio.ListaPersonalActivity"
             android:exported="false" />
         <activity
@@ -130,16 +132,10 @@
             android:name=".UsuarioMedio.Director_ActualizarProfesorActivity"
             android:exported="false" />
         <activity
-            android:name=".UsuarioMedio.Director_ActualizarAlumnoActivity"
-            android:exported="false" />
-        <activity
             android:name=".UsuarioMedio.AgregarDirectorActivity"
             android:exported="false" />
         <activity
             android:name=".UsuarioMedio.ActualizarDirectorActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UsuarioMedio.EliminarDirectorActivity"
             android:exported="false" />
         <activity
             android:name=".UsuarioMedio.ModificarDirectorActivity"
@@ -182,15 +178,6 @@
             android:exported="false" />
         <activity
             android:name=".UsuarioBasico.AlumnoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AdministracionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AndministracionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
             android:exported="false" />
         <activity
             android:name=".ForgotPassword"

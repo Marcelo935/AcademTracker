@@ -1,49 +1,70 @@
 package com.example.academtracker.model;
 
-public class Materia {
-    private String nombre;
-    private String parcial1;
-    private String parcial2;
-    private String parcial3;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    // Constructor
+public class Materia implements Parcelable {
+    private String nombre;
+    private double parcial1;
+    private double parcial2;
+    private double parcial3;
+
     public Materia(String nombre, String parcial1, String parcial2, String parcial3) {
         this.nombre = nombre;
-        this.parcial1 = parcial1;
-        this.parcial2 = parcial2;
-        this.parcial3 = parcial3;
+        this.parcial1 = Double.parseDouble(parcial1.isEmpty() ? "0" : parcial1);
+        this.parcial2 = Double.parseDouble(parcial2.isEmpty() ? "0" : parcial2);
+        this.parcial3 = Double.parseDouble(parcial3.isEmpty() ? "0" : parcial3);
     }
 
-    // Getters y Setters
+    protected Materia(Parcel in) {
+        nombre = in.readString();
+        parcial1 = in.readDouble();
+        parcial2 = in.readDouble();
+        parcial3 = in.readDouble();
+    }
+
+    public static final Creator<Materia> CREATOR = new Creator<Materia>() {
+        @Override
+        public Materia createFromParcel(Parcel in) {
+            return new Materia(in);
+        }
+
+        @Override
+        public Materia[] newArray(int size) {
+            return new Materia[size];
+        }
+    };
+
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getParcial1() {
+    public double getParcial1() {
         return parcial1;
     }
 
-    public void setParcial1(String parcial1) {
-        this.parcial1 = parcial1;
-    }
-
-    public String getParcial2() {
+    public double getParcial2() {
         return parcial2;
     }
 
-    public void setParcial2(String parcial2) {
-        this.parcial2 = parcial2;
-    }
-
-    public String getParcial3() {
+    public double getParcial3() {
         return parcial3;
     }
 
-    public void setParcial3(String parcial3) {
-        this.parcial3 = parcial3;
+    public double getPromedio() {
+        return (parcial1 + parcial2 + parcial3) / 3.0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(nombre);
+        parcel.writeDouble(parcial1);
+        parcel.writeDouble(parcial2);
+        parcel.writeDouble(parcial3);
     }
 }

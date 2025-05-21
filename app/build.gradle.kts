@@ -59,4 +59,5 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.3")
     implementation ("androidx.drawerlayout:drawerlayout:1.1.1")
     implementation ("com.google.android.material:material:1.4.0")
+    implementation("com.github.AnyChart:AnyChart-Android:1.1.2")
 }

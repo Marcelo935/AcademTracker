@@ -26,7 +26,7 @@ public class AlumnoActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     TextView nombrealumno;
 
-    MaterialButton perfil, listaprofesores, estadistica, salir, listapagos, calificaciones;
+    MaterialButton perfil, listaprofesores, estadistica, salir, listapagos, calificaciones,graficoprom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class AlumnoActivity extends AppCompatActivity {
         salir = findViewById(R.id.salirbtn);
         listapagos = findViewById(R.id.pagosbtn);
         calificaciones = findViewById(R.id.calificacionesbtn);
+        graficoprom = findViewById(R.id.promediochart);
 
         // Obtener usuario logueado
         FirebaseUser usuarioActual = mAuth.getCurrentUser();
@@ -67,6 +68,12 @@ public class AlumnoActivity extends AppCompatActivity {
         // Setear los OnClickListeners para los botones
         perfil.setOnClickListener(v -> {
             Intent intent = new Intent(AlumnoActivity.this, PerfilAlumnoActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        graficoprom.setOnClickListener(v -> {
+            Intent intent = new Intent(AlumnoActivity.this, ResultadoPromedioActivity.class);
             startActivity(intent);
             finish();
         });
