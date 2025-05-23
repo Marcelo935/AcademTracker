@@ -6,88 +6,97 @@
     android:layout_height="match_parent"
     tools:context=".UsuarioBasico.PerfilAlumnoActivity">
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/returnbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="REGRESAR"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="70dp" />
-
-    <!-- ImageView -->
+    <!-- Imagen del alumno -->
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="24dp"
+        android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="21dp"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <!-- Nombre Value TextView -->
+    <!-- Nombre -->
     <TextView
         android:id="@+id/nombrecompleto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Nombre"
+        android:text="Nombre del Alumno"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/imageView2"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="16dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Email Value TextView -->
+    <!-- Email -->
     <TextView
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:text="correo@ejemplo.com"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/nombrecompleto"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Grado Value TextView -->
-    <TextView
-        android:id="@+id/grado"
+    <!-- Grado y Grupo en línea -->
+    <LinearLayout
+        android:id="@+id/gradoGrupoLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Grado"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/email"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Grupo Value TextView -->
-    <TextView
-        android:id="@+id/grupo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Grupo"
-        app:layout_constraintTop_toTopOf="@id/grado"
-        app:layout_constraintStart_toEndOf="@id/grado"
-        android:layout_marginStart="32dp" />
+        <TextView
+            android:id="@+id/grado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grado"
+            android:layout_marginEnd="24dp" />
 
+        <TextView
+            android:id="@+id/grupo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grupo" />
+    </LinearLayout>
+
+    <!-- Botón Ver Promedios -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnVerPromedio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/grado"
-        app:layout_constraintStart_toEndOf="@id/grado"
         android:text="Ver Promedios"
         android:layout_marginTop="16dp"
-        />
+        app:layout_constraintTop_toBottomOf="@id/gradoGrupoLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- RecyclerView para las gráficas -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewGraficas"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/grupo"
+        app:layout_constraintTop_toBottomOf="@id/btnVerPromedio"
         app:layout_constraintBottom_toTopOf="@id/returnbtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Botón Regresar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/returnbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REGRESAR"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
