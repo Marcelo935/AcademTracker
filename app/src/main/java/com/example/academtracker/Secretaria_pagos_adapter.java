@@ -35,6 +35,7 @@ public class Secretaria_pagos_adapter extends FirestoreRecyclerAdapter<Pagos,Sec
         viewHolder.MetodoPago.setText(pagos.getMetodoPago());
         viewHolder.Monto.setText(String.valueOf(pagos.getMonto()));
         viewHolder.Fecha.setText(pagos.getFecha());
+        viewHolder.Pago.setText(pagos.getconceptoPago());
     }
 
     @NonNull
@@ -46,7 +47,7 @@ public class Secretaria_pagos_adapter extends FirestoreRecyclerAdapter<Pagos,Sec
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView Correo, MetodoPago, Monto, Fecha;
+        TextView Correo, MetodoPago, Monto, Fecha, Pago;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -54,6 +55,7 @@ public class Secretaria_pagos_adapter extends FirestoreRecyclerAdapter<Pagos,Sec
             MetodoPago = itemView.findViewById(R.id.metodo_Pago);
             Monto = itemView.findViewById(R.id.monto_Pago);
             Fecha = itemView.findViewById(R.id.fecha_pago);
+            Pago = itemView.findViewById(R.id.concepto_pago);
         }
     }
 }

@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.academtracker.R;
 import com.example.academtracker.model.Asistencia;
+import com.google.firebase.Timestamp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AsistenciasAdapter extends RecyclerView.Adapter<AsistenciasAdapter.ViewHolder> {
 
@@ -32,9 +36,20 @@ public class AsistenciasAdapter extends RecyclerView.Adapter<AsistenciasAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Asistencia asistencia = asistencias.get(position);
+
         holder.tvAlumno.setText("Alumno: " + asistencia.getAlumnoID());
         holder.tvMateria.setText("Materia: " + asistencia.getMateria());
-        holder.tvFecha.setText("Fecha: " + asistencia.getFecha().toString());
+
+        // Formatear la fecha de manera legible
+        Timestamp ts = asistencia.getFecha();
+        String fechaFormateada = "Sin fecha";
+        if (ts != null) {
+            Date date = ts.toDate();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+            fechaFormateada = sdf.format(date);
+        }
+
+        holder.tvFecha.setText("Fecha: " + fechaFormateada);
         holder.tvPresente.setText("Presente: " + (asistencia.isPresente() ? "Sí" : "No"));
     }
 
@@ -52,7 +67,6 @@ public class AsistenciasAdapter extends RecyclerView.Adapter<AsistenciasAdapter.
             tvMateria = itemView.findViewById(R.id.tvMateria);
             tvFecha = itemView.findViewById(R.id.tvFecha);
             tvPresente = itemView.findViewById(R.id.tvPresente);
-
         }
     }
 }

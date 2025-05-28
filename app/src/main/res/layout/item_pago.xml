@@ -27,4 +27,11 @@
         android:layout_height="wrap_content"
         android:text="Método de Pago: Tarjeta"
         android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tvConceptoPago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Concepto de pago: "
+        android:textSize="14sp"/>
 </LinearLayout>

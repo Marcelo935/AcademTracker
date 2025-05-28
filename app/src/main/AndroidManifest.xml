@@ -27,6 +27,9 @@
         tools:replace="android:appComponentFactory"
         tools:targetApi="31">
         <activity
+            android:name=".UsuarioBasico.PrediccionCalificacionesActivity"
+            android:exported="false" />
+        <activity
             android:name=".UsuarioBasico.ResultadoPromedioActivity"
             android:exported="false" />
         <activity

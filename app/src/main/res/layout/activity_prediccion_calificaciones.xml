@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Predicción de calificaciones"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <EditText
+            android:id="@+id/et_parcial1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Calificación 1er parcial"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/et_parcial2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Calificación 2do parcial"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/et_parcial3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Calificación 3er parcial"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btn_generar_grafica"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generar gráfica"
+            android:layout_marginBottom="16dp" />
+
+        <com.anychart.AnyChartView
+            android:id="@+id/any_chart_view"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
+    </LinearLayout>
+</ScrollView>

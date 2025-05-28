@@ -26,10 +26,12 @@
                 android:text="Correo del alumno:"
                 android:textSize="16sp"
                 />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
+
                 <TextView
                     android:id="@+id/metodo_Pago"
                     android:layout_width="wrap_content"
@@ -37,6 +39,7 @@
                     android:text="Metodo de pago:"
                     android:textSize="16sp"
                     />
+
                 <TextView
                     android:id="@+id/monto_Pago"
                     android:layout_width="wrap_content"
@@ -45,11 +48,9 @@
                     android:layout_marginLeft="80dp"
                     android:textSize="16sp"
                     />
-
             </LinearLayout>
 
         </LinearLayout>
-
     </LinearLayout>
 
     <TextView
@@ -60,10 +61,18 @@
         android:textSize="16sp"
         android:text="Fecha:"/>
 
+    <!-- ✅ Nuevo campo: Concepto de pago -->
+    <TextView
+        android:id="@+id/concepto_pago"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Concepto:"
+        android:textSize="16sp"
+        android:layout_marginTop="5dp"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
         android:background="@color/gris"/>
-
 </LinearLayout>

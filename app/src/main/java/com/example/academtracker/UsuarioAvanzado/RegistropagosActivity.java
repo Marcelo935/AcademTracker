@@ -15,20 +15,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.academtracker.R;
 import com.example.academtracker.Secretaria_pagos_man;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 
 public class RegistropagosActivity extends AppCompatActivity {
 
-    private EditText etMonto, etFecha, etAlumnoId;
+    private EditText etMonto, etFecha, etAlumnoId, etConceptoPago;
     private Spinner spMetodoPago;
     private Button btnRegistrarPago, btnVerPagos;
     private FirebaseFirestore db;
     private String metodoPagoSeleccionado;
-
+    private String conceptoPago;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +38,12 @@ public class RegistropagosActivity extends AppCompatActivity {
         etMonto = findViewById(R.id.etMonto);
         etFecha = findViewById(R.id.etFecha);
         etAlumnoId = findViewById(R.id.etAlumnoId);
+        etConceptoPago = findViewById(R.id.etConceptoPago); // Nuevo campo
         spMetodoPago = findViewById(R.id.spMetodoPago);
         btnRegistrarPago = findViewById(R.id.btnRegistrarPago);
         btnVerPagos = findViewById(R.id.btnVerPagos);
 
-        // Configurar el Spinner para método de pago
+        // Configurar Spinner método de pago
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.metodos_pago, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -55,20 +54,19 @@ public class RegistropagosActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 metodoPagoSeleccionado = parent.getItemAtPosition(position).toString();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 metodoPagoSeleccionado = "";
             }
         });
 
-        // Configurar el selector de fecha
+        // Selector de fecha
         etFecha.setOnClickListener(v -> mostrarSelectorFecha());
 
-        // Configurar el botón de registro de pago
+        // Botón registrar pago
         btnRegistrarPago.setOnClickListener(v -> registrarPago());
 
-        // Configurar el botón para ver los pagos
+        // Botón ver pagos
         btnVerPagos.setOnClickListener(v -> {
             Intent intent = new Intent(RegistropagosActivity.this, Secretaria_pagos_man.class);
             startActivity(intent);
@@ -91,18 +89,17 @@ public class RegistropagosActivity extends AppCompatActivity {
     }
 
     private void registrarPago() {
-        // Obtener los datos ingresados
         String montoString = etMonto.getText().toString().trim();
         String fecha = etFecha.getText().toString().trim();
         String alumnoId = etAlumnoId.getText().toString().trim();
+        String conceptoPago = etConceptoPago.getText().toString().trim();
 
-        // Validar que los campos no estén vacíos
-        if (montoString.isEmpty() || metodoPagoSeleccionado.isEmpty() || fecha.isEmpty() || alumnoId.isEmpty()) {
+        // Validar campos obligatorios
+        if (montoString.isEmpty() || metodoPagoSeleccionado.isEmpty() || fecha.isEmpty() || alumnoId.isEmpty() || conceptoPago.isEmpty()) {
             Toast.makeText(RegistropagosActivity.this, "Todos los campos son requeridos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Validar que el monto sea un número válido
         double monto;
         try {
             monto = Double.parseDouble(montoString);
@@ -111,27 +108,21 @@ public class RegistropagosActivity extends AppCompatActivity {
             return;
         }
 
-        // Validar que el alumnoId existe en Firestore
+        // Verificar que el alumno exista
         db.collection("Alumnos").document(alumnoId).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
-                // Si el alumno existe, proceder con el registro del pago
-                Payment payment = new Payment(monto, metodoPagoSeleccionado, fecha, alumnoId);
+                Payment payment = new Payment(monto, metodoPagoSeleccionado, fecha, alumnoId, conceptoPago);
 
                 db.collection("Pagos")
                         .add(payment)
                         .addOnSuccessListener(documentReference -> {
                             Toast.makeText(RegistropagosActivity.this, "Pago registrado exitosamente", Toast.LENGTH_SHORT).show();
-                            // Limpiar los campos
-                            etMonto.setText("");
-                            etFecha.setText("");
-                            etAlumnoId.setText("");
-                            spMetodoPago.setSelection(0);
+                            limpiarCampos();
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(RegistropagosActivity.this, "Error al registrar el pago", Toast.LENGTH_SHORT).show();
                         });
             } else {
-                // Si el alumno no existe, mostrar un mensaje de error
                 Toast.makeText(RegistropagosActivity.this, "El ID del alumno no está registrado", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(e -> {
@@ -139,34 +130,34 @@ public class RegistropagosActivity extends AppCompatActivity {
         });
     }
 
+    private void limpiarCampos() {
+        etMonto.setText("");
+        etFecha.setText("");
+        etAlumnoId.setText("");
+        etConceptoPago.setText("");
+        spMetodoPago.setSelection(0);
+    }
+
     public static class Payment {
         private double monto;
         private String metodoPago;
         private String fecha;
         private String alumnoId;
+        private String conceptoPago;
 
-        public Payment(double monto, String metodoPago, String fecha, String alumnoId) {
+        public Payment(double monto, String metodoPago, String fecha, String alumnoId, String conceptoPago) {
             this.monto = monto;
             this.metodoPago = metodoPago;
             this.fecha = fecha;
             this.alumnoId = alumnoId;
+            this.conceptoPago = conceptoPago;
         }
 
-        public double getMonto() {
-            return monto;
-        }
-
-        public String getMetodoPago() {
-            return metodoPago;
-        }
-
-        public String getFecha() {
-            return fecha;
-        }
-
-        public String getAlumnoId() {
-            return alumnoId;
-        }
+        public double getMonto() { return monto; }
+        public String getMetodoPago() { return metodoPago; }
+        public String getFecha() { return fecha; }
+        public String getAlumnoId() { return alumnoId; }
+        public String getConceptoPago() { return conceptoPago; }
     }
 
     @Override

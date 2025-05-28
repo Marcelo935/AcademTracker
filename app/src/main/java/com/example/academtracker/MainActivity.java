@@ -28,25 +28,26 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db; // Agrega la instancia de FirebaseFirestore
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        //Aqui agrego animaciones
         Animation animacion1 = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_arriba);
         Animation animacion2 = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance(); // Inicializa la instancia de FirebaseFirestore
+        db = FirebaseFirestore.getInstance();
 
         TextView AcademTrackerTv = findViewById(R.id.AcademTrackerTv);
         final ImageView logoImage = findViewById(R.id.logoImage);
@@ -55,189 +56,122 @@ public class MainActivity extends AppCompatActivity {
         logoImage.setAnimation(animacion1);
 
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null)
-                {
-                    //Se va a buscar el usuario si es alumno
-                    // Obtener referencia a la colección
-                    CollectionReference collectionReference = db.collection("Alumnos");
-                    // Realizar la consulta
-                    collectionReference.get()
+                if (user != null) {
+                    String userEmail = user.getEmail();
+
+                    // Obtener y guardar token FCM
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnSuccessListener(new OnSuccessListener<String>() {
+                                @Override
+                                public void onSuccess(String token) {
+                                    if (userEmail != null) {
+                                        Map<String, Object> tokenMap = new HashMap<>();
+                                        tokenMap.put("token", token);
+
+                                        db.collection("Tokens")
+                                                .document(userEmail)
+                                                .set(tokenMap)
+                                                .addOnSuccessListener(unused -> {
+                                                    // Token guardado correctamente
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(MainActivity.this, "Error al guardar token", Toast.LENGTH_SHORT).show();
+                                                });
+                                    }
+                                }
+                            });
+
+                    // Verifica si es Alumno
+                    db.collection("Alumnos").get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(@NonNull QuerySnapshot querySnapshot) {
-                                    String Email = "";
-                                    String Useremail = "";
-                                    String Grado = "";
-                                    String Grupo = "";
-                                    String Nombre = "";
-                                    String Password = "";
-
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    if(user != null) {
-                                        Useremail = user.getEmail();
-                                        Toast.makeText(MainActivity.this, Useremail, Toast.LENGTH_SHORT).show();
-                                    }
                                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                        Email = document.getString("email");
+                                        String email = document.getString("email");
+                                        if (Objects.equals(email, userEmail)) {
+                                            String grado = document.getString("grado");
+                                            String grupo = document.getString("grupo");
+                                            String nombre = document.getString("nombre");
+                                            String password = document.getString("password");
 
-                                        if(Objects.equals(Email, Useremail))
-                                        {
-                                            //Intent intent = new Intent(LoginActivity.this, UserActivity.class);
-                                            Grado = document.getString("grado");
-                                            Grupo = document.getString("grupo");
-                                            Nombre = document.getString("nombre");
-                                            Password = document.getString("password");
                                             Intent intent = new Intent(MainActivity.this, AlumnoActivity.class);
-
-                                            intent.putExtra("Email",Email);//Mandamos el valor de la variable al perfil de alumnos
-                                            intent.putExtra("Grado",Grado);//Mandamos el valor de la variable al perfil de alumnos
-                                            intent.putExtra("Grupo",Grupo);//Mandamos el valor de la variable al perfil de alumnos
-                                            intent.putExtra("Nombre",Nombre);//Mandamos el valor de la variable al perfil de alumnos
-                                            intent.putExtra("Password",Password);//Mandamos el valor de la variable al perfil de alumnos
-
+                                            intent.putExtra("Email", email);
+                                            intent.putExtra("Grado", grado);
+                                            intent.putExtra("Grupo", grupo);
+                                            intent.putExtra("Nombre", nombre);
+                                            intent.putExtra("Password", password);
                                             startActivity(intent);
                                             finish();
+                                            return;
                                         }
                                     }
-
-
-
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
                                 }
                             });
 
-                    //Se va a buscar si el usuario es profesor
-                    // Obtener referencia a la colección
-                    CollectionReference collectionReference1 = db.collection("Profesores");
-                    // Realizar la consulta
-                    collectionReference1.get()
+                    // Verifica si es Profesor
+                    db.collection("Profesores").get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(@NonNull QuerySnapshot querySnapshot) {
-                                    String Email = "";
-                                    String Useremail = " ";
-
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    if(user != null) {
-                                        Useremail = user.getEmail();
-                                    }
                                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                        Email = document.getString("email");
-
-                                        if(Objects.equals(Email, Useremail))
-                                        {
-                                            //Intent intent = new Intent(LoginActivity.this, UserActivity.class);
-                                            Intent intent = new Intent(MainActivity.this, ProfesorActivity.class);
-                                            startActivity(intent);
+                                        String email = document.getString("email");
+                                        if (Objects.equals(email, userEmail)) {
+                                            startActivity(new Intent(MainActivity.this, ProfesorActivity.class));
                                             finish();
+                                            return;
                                         }
                                     }
-
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
                                 }
                             });
 
-                    CollectionReference collectionReference2 = db.collection("Director");
-                    // Realizar la consulta
-                    collectionReference2.get()
+                    // Verifica si es Director
+                    db.collection("Director").get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(@NonNull QuerySnapshot querySnapshot) {
-                                    String Email = "";
-                                    String Useremail = " ";
-
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    if(user != null) {
-                                        Useremail = user.getEmail();
-                                    }
                                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                        Email = document.getString("Email");
-
-                                        if(Objects.equals(Email, Useremail))
-                                        {
-                                            //Intent intent = new Intent(LoginActivity.this, UserActivity.class);
-                                            Intent intent = new Intent(MainActivity.this, DirectorActivity.class);
-                                            //intent.putExtra("Nombre",nombrealumno);//Mandamos el valor de la variable al perfil de alumnos
-                                            //intent.putExtra("Grado",gradoalumno);//Mandamos el valor de la variable al perfil de alumnos
-                                            startActivity(intent);
+                                        String email = document.getString("Email");
+                                        if (Objects.equals(email, userEmail)) {
+                                            startActivity(new Intent(MainActivity.this, DirectorActivity.class));
                                             finish();
+                                            return;
                                         }
                                     }
-
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainActivity.this, "Ausencia de director", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
-                    CollectionReference collectionReference3 = db.collection("Secretarias");
-                    // Realizar la consulta
-                    collectionReference3.get()
+                    // Verifica si es Secretaria
+                    db.collection("Secretarias").get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(@NonNull QuerySnapshot querySnapshot) {
-                                    String Email = "";
-                                    String Useremail = " ";
-
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    if(user != null) {
-                                        Useremail = user.getEmail();
-                                    }
                                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                        Email = document.getString("email");
-
-                                        if(Objects.equals(Email, Useremail))
-                                        {
-                                            Intent intent = new Intent(MainActivity.this, SecretariasActivity.class);
-                                            startActivity(intent);
+                                        String email = document.getString("email");
+                                        if (Objects.equals(email, userEmail)) {
+                                            startActivity(new Intent(MainActivity.this, SecretariasActivity.class));
                                             finish();
+                                            return;
                                         }
                                     }
-
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainActivity.this, "Ausencia de secretaria", Toast.LENGTH_SHORT).show();
                                 }
                             });
-
-                }else
-                {
+                } else {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-
                     Pair[] pairs = new Pair[2];
                     pairs[0] = new Pair<View, String>(logoImage, "logoImageTrans");
                     pairs[1] = new Pair<View, String>(logoImage, "textTrans");
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
                         startActivity(intent, options.toBundle());
-                    }else
-                    {
+                    } else {
                         startActivity(intent);
                         finish();
                     }
                 }
-
             }
         }, 4000);
     }

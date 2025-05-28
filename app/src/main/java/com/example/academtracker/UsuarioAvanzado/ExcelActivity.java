@@ -1,158 +1,195 @@
 package com.example.academtracker.UsuarioAvanzado;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.academtracker.R;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExcelActivity extends AppCompatActivity {
 
-    private EditText grade1, grade2, grade3;
-    private Button saveButton, calcularcalif;
-    private TextView calcular;
-    private double calificacion1;
-    private double calificacion2;
-    private double calificacion3;
+    TextView titulo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_excel);
 
-        grade1 = findViewById(R.id.grade1);
-        grade2 = findViewById(R.id.grade2);
-        grade3 = findViewById(R.id.grade3);
-        saveButton = findViewById(R.id.saveButton);
-        calcular = findViewById(R.id.txt_calificacion);
-        calcularcalif = findViewById(R.id.calculate_btn);
+        titulo = findViewById(R.id.tvTitulo);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveToExcel();
-            }
-        });
+        exportarCalificacionesDeTodos();
     }
 
-    private void saveToExcel() {
+    private void exportarCalificacionesDeTodos() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Calificaciones");
-        Row row = sheet.createRow(0);
 
-        try {
-            if (!grade1.getText().toString().isEmpty()) {
-                row.createCell(0).setCellValue(Double.parseDouble(grade1.getText().toString()));
-            }
-            if (!grade2.getText().toString().isEmpty()) {
-                row.createCell(1).setCellValue(Double.parseDouble(grade2.getText().toString()));
-            }
-            if (!grade3.getText().toString().isEmpty()) {
-                row.createCell(2).setCellValue(Double.parseDouble(grade3.getText().toString()));
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("Alumno");
+        header.createCell(1).setCellValue("Materia");
+        header.createCell(2).setCellValue("Parcial 1");
+        header.createCell(3).setCellValue("Parcial 2");
+        header.createCell(4).setCellValue("Parcial 3");
+
+        db.collection("Alumnos").get().addOnSuccessListener(alumnos -> {
+            if (alumnos.isEmpty()) {
+                Toast.makeText(this, "No hay alumnos para exportar", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            File file = new File(getExternalFilesDir(null), "Calificaciones.xlsx");
-            FileOutputStream fileOut = new FileOutputStream(file);
-            workbook.write(fileOut);
-            fileOut.close();
-            workbook.close();
+            List<Task<QuerySnapshot>> tareasMaterias = new ArrayList<>();
+            List<String> correosAlumnos = new ArrayList<>();
 
-            Toast.makeText(this, "Calificaciones guardadas en Excel", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error al guardar en Excel", Toast.LENGTH_SHORT).show();
-        }
-
-        calcularcalif.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calcularCalificacionNecesaria();
+            for (QueryDocumentSnapshot alumnoDoc : alumnos) {
+                correosAlumnos.add(alumnoDoc.getId());
+                Task<QuerySnapshot> tareaMaterias = alumnoDoc.getReference().collection("calificaciones").get();
+                tareasMaterias.add(tareaMaterias);
             }
+
+            Tasks.whenAllSuccess(tareasMaterias).addOnSuccessListener(listMaterias -> {
+                int rowIndex = 1;
+
+                for (int i = 0; i < listMaterias.size(); i++) {
+                    QuerySnapshot materias = (QuerySnapshot) listMaterias.get(i);
+                    String email = correosAlumnos.get(i);
+
+                    for (QueryDocumentSnapshot materiaDoc : materias) {
+                        Object p1Obj = materiaDoc.get("1er parcial");
+                        Object p2Obj = materiaDoc.get("2do parcial");
+                        Object p3Obj = materiaDoc.get("3er parcial");
+
+                        double p1 = obtenerCalificacionDesdeString(p1Obj);
+                        double p2 = obtenerCalificacionDesdeString(p2Obj);
+                        double p3 = obtenerCalificacionDesdeString(p3Obj);
+
+                        // Log para verificar datos
+                        Log.d("ExcelExport", "Alumno: " + email + ", Materia: " + materiaDoc.getId() +
+                                ", P1: " + p1 + ", P2: " + p2 + ", P3: " + p3);
+
+                        Row row = sheet.createRow(rowIndex++);
+                        row.createCell(0).setCellValue(email);
+                        row.createCell(1).setCellValue(materiaDoc.getString("nombre") != null ? materiaDoc.getString("nombre") : materiaDoc.getId());
+                        row.createCell(2).setCellValue(p1);
+                        row.createCell(3).setCellValue(p2);
+                        row.createCell(4).setCellValue(p3);
+                    }
+                }
+
+                // Guardar archivo
+                guardarExcelEnDescargas(workbook);
+
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Error al obtener materias", Toast.LENGTH_SHORT).show();
+                Log.e("ExcelExport", "Error obteniendo materias", e);
+            });
+
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Error al obtener alumnos", Toast.LENGTH_SHORT).show();
+            Log.e("ExcelExport", "Error obteniendo alumnos", e);
         });
     }
 
-    private void calcularCalificacionNecesaria() {
+
+
+    private double obtenerCalificacionDesdeString(Object valor) {
+        if (valor == null) return 0;
+        if (valor instanceof Number) {
+            return ((Number) valor).doubleValue();
+        }
+        if (valor instanceof String) {
+            try {
+                return Double.parseDouble((String) valor);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+
+    private void guardarExcelEnDescargas(Workbook workbook) {
         try {
-            File file = new File(getExternalFilesDir(null), "Calificaciones.xlsx");
-            Workbook workbook = new XSSFWorkbook(file);
-            Sheet sheet = workbook.getSheetAt(0);
-            Row row = sheet.getRow(0);
+            String fileName = "Calificaciones_Todos.xlsx";
 
-            // Asigna cada calificación a las variables sin calcular el promedio
-            if (row.getCell(0) != null) {
-                calificacion1 = row.getCell(0).getNumericCellValue();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // API 29 o superior: usar MediaStore
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Downloads.MIME_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                values.put(MediaStore.Downloads.IS_PENDING, 1);
+
+                ContentResolver resolver = getContentResolver();
+                Uri collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                Uri fileUri = resolver.insert(collection, values);
+
+                if (fileUri != null) {
+                    OutputStream out = resolver.openOutputStream(fileUri);
+                    workbook.write(out);
+                    workbook.close();
+                    out.close();
+
+                    values.clear();
+                    values.put(MediaStore.Downloads.IS_PENDING, 0);
+                    resolver.update(fileUri, values, null, null);
+
+                    Toast.makeText(this, "Archivo guardado correctamente en Descargas", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "No se pudo crear el archivo", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // API 28 o menor: guardar manualmente en carpeta pública
+                File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                if (!downloadsDir.exists()) {
+                    downloadsDir.mkdirs();
+                }
+
+                File file = new File(downloadsDir, fileName);
+                FileOutputStream out = new FileOutputStream(file);
+                workbook.write(out);
+                workbook.close();
+                out.close();
+
+                Toast.makeText(this, "Archivo guardado en: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
             }
-            if (row.getCell(1) != null) {
-                calificacion2 = row.getCell(1).getNumericCellValue();
-            }
-            if (row.getCell(2) != null) {
-                calificacion3 = row.getCell(2).getNumericCellValue();
-            }
-
-            workbook.close();
-
-            // Muestra un mensaje para verificar que las calificaciones se guardaron
-            calcularPromedio(calificacion1,calificacion2,calificacion3);
-
-        } catch (IOException | InvalidFormatException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error al leer las calificaciones", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al guardar archivo", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void calcularPromedio(double valor1, double valor2, double valor3) {
-        // Verificar si los tres valores son diferentes de 0
-        if (valor1 != 0 && valor2 != 0 && valor3 != 0) {
-            double promedio = (valor1 + valor2 + valor3) / 3;
-            if(promedio > 100.00){
-                Toast.makeText(this,"Ya no puedes pasar la materia :( ",Toast.LENGTH_SHORT).show();
-            }else{
-                calcular.setText(Double.toString(promedio));
-            }
-        } else {
-            // Calcular el valor faltante necesario para obtener un promedio de al menos 70
-            double promedioMinimo = 70;
-            if (valor1 == 0) {
-                valor1 = promedioMinimo * 3 - valor2 - valor3;
-                if(valor1 > 100.00){
-                    Toast.makeText(this,"Ya no puedes pasar la materia :( ",Toast.LENGTH_SHORT).show();
-                }else{
-                    calcular.setText(Double.toString(valor1));
-                }
-            } else if (valor2 == 0) {
-                valor2 = promedioMinimo * 3 - valor1 - valor3;
-                if(valor2 > 100.00){
-                    Toast.makeText(this,"Ya no puedes pasar la materia :( ",Toast.LENGTH_SHORT).show();
-                }else{
-                    calcular.setText(Double.toString(valor2));
-                }
-            } else if (valor3 == 0) {
-                valor3 = promedioMinimo * 3 - valor1 - valor2;
-                if(valor3 > 100.00){
-                    Toast.makeText(this,"Ya no puedes pasar la materia :( ",Toast.LENGTH_SHORT).show();
-                }else{
-                    calcular.setText(Double.toString(valor3));
-                }
-
-            }
-
-        }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, PerfilSecretariasActivity.class);
+        startActivity(intent);
+        finish();
     }
+
 }

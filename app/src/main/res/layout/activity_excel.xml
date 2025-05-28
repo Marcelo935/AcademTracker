@@ -1,67 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="top|center_horizontal"
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingrese las calificaciones"
-        android:textSize="18sp"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="8dp"/>
-
-    <!-- EditTexts para las calificaciones -->
-    <EditText
-        android:id="@+id/grade1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Calificación 1"
-        android:inputType="numberDecimal"/>
-
-    <EditText
-        android:id="@+id/grade2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Calificación 2 (Opcional)"
-        android:inputType="numberDecimal"/>
-
-    <EditText
-        android:id="@+id/grade3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Calificación 3 (Opcional)"
-        android:inputType="numberDecimal"/>
-
-    <!-- Botón para guardar en Excel -->
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Guardar en Excel"
-        android:layout_gravity="center_horizontal"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Tu calificacion necesaria para pasar es: "
-        android:textSize="19sp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/txt_calificacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:text="Generando archivo Excel..."
         android:textSize="20sp"
-        android:text="0"/>
+        android:textStyle="bold"
+        android:textColor="#000000" />
 
-    <Button
-        android:id="@+id/calculate_btn"
+    <TextView
+        android:id="@+id/tvInstrucciones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calcular"
-        android:layout_gravity="center_horizontal"/>
+        android:text="Por favor vaya a su explorador de archivos y busque la carpeta llamada Download"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_marginTop="12dp"/>
+
+    <ImageView
+        android:id="@+id/imgDemostrativa"
+        android:layout_width="316dp"
+        android:layout_height="266dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="Imagen demostrativa"
+        android:src="@drawable/imagendownload" />
+
+    <TextView
+        android:id="@+id/tvtexto2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Al abrirla se encontrara el archivo generado con las calificaciones"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_marginTop="12dp"/>
+
+    <ImageView
+        android:id="@+id/imgDemostrativa2"
+        android:layout_width="316dp"
+        android:layout_height="266dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="Imagen demostrativa"
+        android:src="@drawable/demostracion" />
 
 </LinearLayout>

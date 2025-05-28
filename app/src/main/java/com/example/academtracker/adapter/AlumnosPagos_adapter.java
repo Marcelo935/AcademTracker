@@ -40,6 +40,7 @@ public class AlumnosPagos_adapter extends RecyclerView.Adapter<AlumnosPagos_adap
         holder.tvMonto.setText("Monto: $" + pago.getMonto());
         holder.tvMetodoPago.setText("Método: " + pago.getMetodoPago());
         holder.tvFecha.setText("Fecha: " + pago.getFecha());
+        holder.tvConcepto.setText("Concepto: " + pago.getconceptoPago());
     }
 
     @Override
@@ -49,13 +50,14 @@ public class AlumnosPagos_adapter extends RecyclerView.Adapter<AlumnosPagos_adap
 
     // Clase ViewHolder
     static class PagoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMonto, tvMetodoPago, tvFecha;
+        TextView tvMonto, tvMetodoPago, tvFecha, tvConcepto;
 
         public PagoViewHolder(@NonNull View itemView) {
             super(itemView);
             tvMonto = itemView.findViewById(R.id.tvMonto);
             tvMetodoPago = itemView.findViewById(R.id.tvMetodoPago);
             tvFecha = itemView.findViewById(R.id.tvFecha);
+            tvConcepto = itemView.findViewById(R.id.tvConceptoPago);
         }
     }
 }

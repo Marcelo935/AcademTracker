@@ -21,66 +21,78 @@
     <!-- Perfil Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/perfilbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Perfil"
         app:layout_constraintTop_toBottomOf="@id/imageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="25dp" />
 
     <!-- Lista de profesores Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/profesoresbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lista de profesores"
         app:layout_constraintTop_toBottomOf="@id/perfilbtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="25dp" />
 
     <!-- Estadísticas Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/statsbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Estadísticas"
         app:layout_constraintTop_toBottomOf="@id/profesoresbtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="25dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/pagosbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lista de pagos"
         app:layout_constraintTop_toBottomOf="@id/statsbtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="25dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/calificacionesbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Calificaciones"
         app:layout_constraintTop_toBottomOf="@id/pagosbtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="25dp" />
 
-    <!-- Logout Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/salirbtn"
-        android:layout_width="wrap_content"
+        android:id="@+id/prediccionesbtn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LOGOUT"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Predicciones"
+        app:layout_constraintTop_toBottomOf="@id/calificacionesbtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="70dp" />
+        android:layout_marginTop="25dp" />
+
+    <!-- Logout Button -->
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/salirbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:text="LOGOUT"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/nombrealumno"

@@ -5,16 +5,18 @@ public class Pagos {
     String fecha;
     String metodoPago;
     Double monto;
+    String conceptoPago;
 
     public Pagos(){
 
     }
 
-    public Pagos (String alumnoId, String fecha, String metodoPago, Double monto){
+    public Pagos (String alumnoId, String fecha, String metodoPago, Double monto, String conceptoPago){
         this.alumnoId = alumnoId;
         this.fecha = fecha;
         this.metodoPago = metodoPago;
         this.monto = monto;
+        this.conceptoPago = conceptoPago;
     }
 
     public String getAlumnoId() {
@@ -47,6 +49,10 @@ public class Pagos {
 
     public void setMonto(Double monto) {
         this.monto = monto;
+    }
+
+    public String getconceptoPago() {
+        return conceptoPago;
     }
 
 }

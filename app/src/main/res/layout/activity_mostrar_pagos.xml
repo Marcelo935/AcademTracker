@@ -6,6 +6,61 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Historial de pagos realizados"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="12dp"/>
+
+    <!-- Layout para filtros -->
+    <LinearLayout
+        android:id="@+id/layoutFiltros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp">
+
+        <EditText
+            android:id="@+id/etFechaFiltro"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="Fecha (yyyy-MM-dd)"
+            android:focusable="false"
+            android:clickable="true"
+            android:padding="8dp"
+            android:background="@android:drawable/edit_text"
+            android:maxLines="1"
+            android:layout_marginEnd="8dp" />
+
+
+        <EditText
+            android:id="@+id/etConceptoFiltro"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="Concepto de pago"
+            android:padding="8dp"
+            android:background="@android:drawable/edit_text"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:layout_marginStart="8dp"/>
+
+        <Button
+            android:id="@+id/btnAplicarFiltro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtrar"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- Mensaje cuando no hay pagos -->
     <TextView
         android:id="@+id/tvEmptyMessage"
         android:layout_width="match_parent"
@@ -13,12 +68,16 @@
         android:text="No hay pagos registrados"
         android:visibility="gone"
         android:textSize="16sp"
+        android:textColor="@android:color/holo_red_dark"
         android:gravity="center"
-        android:padding="8dp"/>
+        android:padding="16dp"/>
 
+    <!-- RecyclerView para mostrar pagos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPagos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:visibility="visible"/>
+
 </LinearLayout>

@@ -1,29 +1,44 @@
 package com.example.academtracker.model;
 
-import java.util.Date;
+import com.google.firebase.Timestamp;
 
 public class Asistencia {
     private String alumnoID;
     private String materia;
-    private Date fecha;
+    private Timestamp fecha;
     private boolean presente;
-    private String profesorEmail;
 
-    public Asistencia() { }
+    public Asistencia() {} // Requerido por Firestore
 
-    public Asistencia(String alumnoID, String materia, Date fecha, boolean presente, String profesorEmail) {
-        this.alumnoID = alumnoID;
-        this.materia = materia;
-        this.fecha = fecha;
-        this.presente = presente;
-        this.profesorEmail = profesorEmail;
+    public String getAlumnoID() {
+        return alumnoID;
     }
 
-    // Getters y Setters
-    public String getAlumnoID() { return alumnoID; }
-    public String getMateria() { return materia; }
-    public Date getFecha() { return fecha; }
-    public boolean isPresente() { return presente; }
-    public String getProfesorEmail() { return profesorEmail; }
-}
+    public void setAlumnoID(String alumnoID) {
+        this.alumnoID = alumnoID;
+    }
 
+    public String getMateria() {
+        return materia;
+    }
+
+    public void setMateria(String materia) {
+        this.materia = materia;
+    }
+
+    public Timestamp getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
+
+    public boolean isPresente() {
+        return presente;
+    }
+
+    public void setPresente(boolean presente) {
+        this.presente = presente;
+    }
+}

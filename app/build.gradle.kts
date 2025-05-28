@@ -60,4 +60,5 @@ dependencies {
     implementation ("androidx.drawerlayout:drawerlayout:1.1.1")
     implementation ("com.google.android.material:material:1.4.0")
     implementation("com.github.AnyChart:AnyChart-Android:1.1.2")
+    implementation ("com.google.firebase:firebase-messaging:23.4.1")
 }

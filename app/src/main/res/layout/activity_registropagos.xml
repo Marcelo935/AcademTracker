@@ -23,12 +23,21 @@
         android:layout_below="@id/tituloRegistroPagos"
         android:layout_marginTop="16dp" />
 
+    <EditText
+        android:id="@+id/etConceptoPago"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etMonto"
+        android:hint="Concepto de pago"
+        android:inputType="text"
+        />
+
     <!-- Spinner para el método de pago -->
     <Spinner
         android:id="@+id/spMetodoPago"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etMonto"
+        android:layout_below="@id/etConceptoPago"
         android:layout_marginTop="16dp" />
 
     <!-- Campo para la fecha -->
